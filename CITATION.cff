@@ -5,6 +5,7 @@ authors:
   - family-names: Vynohradov
     given-names: Anton
 version: "0.4"
+doi: 10.5281/zenodo.24441477
 date-released: 2026-11-22
 license: MIT
 type: software

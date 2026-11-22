@@ -1,5 +1,7 @@
 # Goldbach numbers in intervals of length 2 log² x under RH
 
+[![DOI](https://zenodo.org/badge/1467471122.svg)](https://doi.org/10.5281/zenodo.24441477)
+
 **Claim (conditional on the Riemann hypothesis).** For every real x ≥ 4, the interval
 (x, x + 2 log² x] contains an even number that is a sum of two primes. The previous best
 constant was 123 (Chirre–Hagen, Res. Number Theory 2026).
