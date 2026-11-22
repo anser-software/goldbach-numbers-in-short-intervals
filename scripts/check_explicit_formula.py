@@ -1,7 +1,8 @@
 """Floating-point cross-checks against the first 20 000 zeta zeros (not used in the proof).
 
-Uses zeta_zeros_20000.npy: the ordinates 0 < gamma_1 < ... < gamma_20000 (about 18 digits,
-computed with mpmath.zetazero), in this directory unless a path is given as argv[1].
+Uses zeta_zeros_20000.npy (or zeta_zeros_20000.csv, one ordinate per line): the ordinates
+0 < gamma_1 < ... < gamma_20000 (about 18 digits, computed with mpmath.zetazero), in this
+directory unless a path is given as argv[1].
 
 1. The explicit formula for psi (the Lean hypothesis ExplicitFormulaPsi): for non-integer y > 1,
        sum_{|gamma| <= T} y^rho/rho  ->  y - psi(y) - log(2 pi) - (1/2) log(1 - y^{-2}),
@@ -22,8 +23,13 @@ import numpy as np
 from scipy import integrate, special
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ZFILE = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, "zeta_zeros_20000.npy")
-g = np.load(ZFILE)
+if len(sys.argv) > 1:
+    ZFILE = sys.argv[1]
+elif os.path.exists(os.path.join(HERE, "zeta_zeros_20000.npy")):
+    ZFILE = os.path.join(HERE, "zeta_zeros_20000.npy")
+else:
+    ZFILE = os.path.join(HERE, "zeta_zeros_20000.csv")
+g = np.loadtxt(ZFILE) if ZFILE.endswith(".csv") else np.load(ZFILE)
 GMAX = float(g[-1])
 
 EULER = 0.57721566490153286061
