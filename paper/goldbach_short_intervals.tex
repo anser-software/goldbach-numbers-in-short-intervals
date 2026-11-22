@@ -1,4 +1,4 @@
-% Version 0.4.1, 22 November 2026.  Build: ~/.local/bin/tectonic -X compile goldbach_short_intervals.tex  (Tectonic 0.17.0).
+% Version 0.5, 23 November 2026.  Build: ~/.local/bin/tectonic -X compile goldbach_short_intervals.tex  (Tectonic 0.17.0).
 % The numbering of Theorem 1 -- Remark 14 is referenced by the Lean formalization and the README;
 % new remarks must stay unnumbered (remark*).
 \documentclass[11pt]{amsart}
@@ -30,13 +30,13 @@
 \title[Goldbach numbers in short intervals]{Goldbach numbers in intervals of length $2\log^2 x$\\ under the Riemann hypothesis}
 \author{Anton Vynohradov}
 \urladdr{https://orcid.org/0009-0002-6771-3681}
-\date{Version 0.4.1, 22 November 2026}
+\date{Version 0.5, 23 November 2026}
 \subjclass[2020]{Primary 11P32; Secondary 11M26, 11N05}
 \keywords{Goldbach numbers, short intervals, Riemann hypothesis, explicit formula, Selberg integral}
 
 \begin{document}
 \begin{abstract}
-Assuming the Riemann hypothesis, we prove that for every $x\ge 4$ the interval $(x,x+2\log^2x]$ contains an even integer that is a sum of two primes. The previous best constant was $123$, due to Chirre and Hagen. The improvement comes from three changes to the classical Selberg-integral argument. We pair intervals of relative length. We use a positive-definite weight on the logarithmic scale whose width grows like $\sqrt{\log x}$. And we evaluate the resulting zero sums exactly by the Weil explicit formula, which also makes the prime-power contribution negligible. The constant $2$ is the limit of the method, and we compare it heuristically with Goldston's deduction, which reaches the same constant from mean-square bounds of the same size.
+Assuming the Riemann hypothesis, we prove that for every $x\ge 4$ the interval $(x,x+2\log^2x]$ contains an even integer that is a sum of two primes. The best published constant was $123$, due to Chirre and Hagen, and Hubbard has since announced $4.45$ in a preprint. The improvement comes from three changes to the classical Selberg-integral argument. We pair intervals of relative length. We use a positive-definite weight on the logarithmic scale whose width grows like $\sqrt{\log x}$. And we evaluate the resulting zero sums exactly by the Weil explicit formula, which also makes the prime-power contribution negligible. The constant $2$ is the limit of the method, and we compare it heuristically with Goldston's deduction, which reaches the same constant from mean-square bounds of the same size.
 \end{abstract}
 \maketitle
 
@@ -45,7 +45,7 @@ Assuming the Riemann hypothesis, we prove that for every $x\ge 4$ the interval $
 
 A \emph{Goldbach number} is an even integer that is the sum of two primes. The binary Goldbach conjecture asserts that every even integer greater than $2$ is a Goldbach number. It has been verified up to $4\cdot10^{18}$~\cite{OHP} but remains open. A weaker question is how long an interval must be before it is certain to contain a Goldbach number.
 
-Under the Riemann hypothesis (RH), Linnik~\cite{Linnik} showed that $[N,N+(\log N)^{3+\varepsilon}]$ contains a Goldbach number for large $N$. Kátai~\cite{Katai} and Montgomery--Vaughan~\cite{MV} reduced the length to $C\log^2N$, and this order has not been improved under RH alone. Goldston~\cite{Goldston} gave a different deduction which, under the pair-correlation conjecture, yields $(2+\varepsilon)\log N$. Explicit values of $C$, valid for all $x\ge2$, are $9696$ (Cully-Hugill--Dudek~\cite{CHD}) and $123$ (Chirre--Hagen~\cite{CH}). Our main result is the following.
+Under the Riemann hypothesis (RH), Linnik~\cite{Linnik} showed that $[N,N+(\log N)^{3+\varepsilon}]$ contains a Goldbach number for large $N$. Kátai~\cite{Katai} and Montgomery--Vaughan~\cite{MV} reduced the length to $C\log^2N$, and this order has not been improved under RH alone. Goldston~\cite{Goldston} gave a different deduction which, under the pair-correlation conjecture, yields $(2+\varepsilon)\log N$. Explicit values of $C$, valid for all $x\ge2$, are $9696$ (Cully-Hugill--Dudek~\cite{CHD}) and $123$ (Chirre--Hagen~\cite{CH}). More recently, Hubbard~\cite{Hubbard} has announced $C=4.45$ for $x\ge3$, for the open interval $(x,x+4.45\log^2x)$, in a preprint that has not been refereed. Our main result is the following.
 
 \begin{theorem}\label{thm:main}
 Assume RH. For every $x\ge4$ the interval $(x,\,x+2\log^2x]$ contains a Goldbach number.
@@ -72,7 +72,7 @@ Chirre and Hagen bound the Selberg integral by
 \[
 \int_{ax}^x(\theta((1+\delta)y)-\theta(y)-\delta y)^2\dd y\le K\delta x^2\log^2(2.0001/\delta),\qquad K=2.5571
 \]
-\cite[Thm.~3]{CH}. They then use the Montgomery--Vaughan covering, which pairs intervals of absolute length $h/2$ and integrates the prime-free deficit $\delta^2y^2$ against Lebesgue measure. This gives $C=48K$. We remove three losses in this argument.
+\cite[Thm.~3]{CH}. They then use the Montgomery--Vaughan covering, which pairs intervals of absolute length $h/2$ and integrates the prime-free deficit $\delta^2y^2$ against Lebesgue measure. This gives $C=48K$. Hubbard~\cite{Hubbard} keeps this framework. He replaces the sharp cutoff in the mean square by a smooth weight, which lowers the mean-square constant from $2.2258$ to $1.0069$ in his normalisation~\cite[\S1]{Hubbard}, and he weights the final deduction; this gives $4.45$. We instead remove three losses in the argument.
 \begin{enumerate}[label=(\arabic*)]
 \item \emph{Relative intervals.} If $p\in(y,(1+\delta)y]$ and $q\in(x-y,(1+\delta)(x-y)]$, then $p+q\in(x,(1+\delta)x]$. So relative intervals with $\delta=H/x$ suffice, which saves a factor $2$.
 \item \emph{A weight that matches the deficit.} The deficit $\delta^2y^2$ is tiny for small $y$, while the unweighted integral is dominated by $y\approx x$. The weight $\omega(y)=(x/y)^2W(\log(x/y))$ makes the deficit uniform. This saves the factor $24=1/\int_0^{1/2}u^2\dd u$, up to $\int_{\log2}^\infty W(v)e^{-v}\dd v\le\tfrac12$.
@@ -530,13 +530,23 @@ J(N,K)=KN\log N+2\sum_{n<K}(K-n)Z(N;n)-K^2N+o(K^2N),\qquad Z(N;n)=\sum_{\substac
 \]
 (his eq.~(11)). Suppose RH gave $J(N,K)\le(\kappa+o(1))KN\log^2N$ for $K\asymp\log^2N$. Then, for each fixed $\varepsilon>0$ and all large $N$, the interval $(N-K,N+K)$ contains a Goldbach number once $K\ge(\kappa+\varepsilon)\log^2N$; that is, intervals of length $2(\kappa+\varepsilon)\log^2N$ suffice.
 
-Heuristically, a mean-square input of the strength of Lemma~\ref{lem:schur} and Proposition~\ref{prop:table} corresponds to $\kappa=1$, and with $\kappa=1$ Goldston's deduction gives the same constant $2$ as ours. We have not proved a transfer theorem that turns our weighted estimate for relative intervals into a bound for $J(N,K)$, so this agreement is an observation, not a theorem. It suggests that a constant below $2$, along either route, needs an RH-only mean-square bound with $\kappa<1$. By (25), such a bound amounts, up to lower-order terms, to an averaged prime-pair bound
-\[
-\sum_{n<K}(K-n)\big(Z(N;n)-\mathfrak S(n)N\big)\le\tfrac\kappa2KN\log^2N\qquad(K\asymp\log^2N),
-\]
-which would require information beyond the mean-square bound, for example on the pair correlation of zeros~\cite{Montgomery}. We know of no such result under RH alone.
+Heuristically, a mean-square input of the strength of Lemma~\ref{lem:schur} and Proposition~\ref{prop:table} corresponds to $\kappa=1$, and with $\kappa=1$ Goldston's deduction gives the same constant $2$ as ours. We have not proved a transfer theorem that turns our weighted estimate for relative intervals into a bound for $J(N,K)$, so this agreement is an observation, not a theorem.
 
-Goldston's Corollary~3~\cite{Goldston} needs an averaged upper-bound sieve constant $A<2$ for prime pairs. Because of the parity phenomenon~\cite{Bombieri,FI}, we do not expect sieve methods alone to give this. Numerically, $J(10^8,339)=0.81\,KN\log(N/K)=0.030\,KN\log^2N$ (Appendix~\ref{app:comp}). So the true size of $J$ is far below the RH bound, and the loss lies in that bound rather than in either deduction.
+\subsection*{The constant $2$ in Goldston's deduction}
+Within Goldston's deduction the role of the constant $2$ can be made precise. Put
+\[
+A(N,K)=\frac{\sum_{0<h<K}(K-h)Z(N;h)}{K^2N/2},
+\]
+an averaged analogue of the prime-pair constant $A$ in Goldston's eq.~(14), which reads $Z(n;k)<(A+\varepsilon)\mathfrak S(k)n$. If $(N-K,N+K)$ contains no Goldbach number, the sum in (6) vanishes, and (6) and (25) give
+\[
+\big(2-A(N,K)\big)K^2N\le KN\log N+O(KN)+o(K^2N).
+\]
+So for $K\asymp\log^2N$ the deduction finds a Goldbach number in $(N-K,N+K)$ for all large $N$ whenever $A(N,K)\le2-\varepsilon$ for a fixed $\varepsilon>0$, and it gives nothing when $A(N,K)\ge2+\varepsilon$. By (25), a bound $J(N,K)\le(\kappa+o(1))KN\log^2N$ at $K=c\log^2N$ is equivalent to $A(N,K)\le1+\kappa/c+o(1)$. Along this route, therefore, intervals of length $2c\log^2N$ with $c<\kappa$ require an averaged prime-pair bound $A(N,c\log^2N)<2$ that the mean-square bound does not supply. Such a bound would need information beyond the mean-square bound, for example on the pair correlation of zeros~\cite{Montgomery}. We know of no such result under RH alone.
+
+Conversely, Goldston's Corollary~3~\cite{Goldston} shows that his eq.~(14) with some $A<2$ would give Goldbach numbers in all intervals of length $O(\log N)$, far beyond the constant $2$. He records that (14) is known with $A=3.9171$ for all $k$, and with $A=3.454$ for $k\le\log^DN$. Because of the parity phenomenon~\cite{Bombieri,FI}, we do not expect sieve methods alone to give $A<2$.
+
+\subsection*{Numerical values}
+For $N=10^8$ and $K=\lfloor c\log^2N\rceil$ (the nearest integer) we find $A(N,K)=0.931$, $0.961$ and $0.978$ for $c=\frac14$, $\frac12$ and $1$ (Appendix~\ref{app:comp}). For $K=339$ (that is, $c=1$), $J(10^8,339)=0.81\,KN\log(N/K)=0.030\,KN\log^2N$. So the true values are far from both the threshold $A=2$ and the RH bound, and the loss lies in that bound rather than in either deduction.
 
 %======================================================================
 \section*{Note on the preparation of this paper}
@@ -572,7 +582,7 @@ All computations are reproducible with the scripts accompanying this paper. They
 \begin{itemize}
 \item[--] \texttt{scripts/range\_proof.py} recomputes Table~\ref{tab:rem} in floating point, checks the monotonicity on $8\cdot10^4$ points in $[L_0,10^8]$, and gives the ratios in Remark~\ref{rem:ratio};
 \item[--] \texttt{scripts/check\_explicit\_formula.py} uses the first $20\,000$ zeros. It compares the truncated explicit formula for $\psi$ with $\psi$ itself at three points; it compares $R(\gamma)$ computed from the zeros with the expression of Lemma~\ref{lem:R} at four values of $\gamma$, which agree to about $10^{-8}$; it evaluates $\sum_\gamma\gamma^{-2}\approx0.0462$, against the bound $0.12$ of (L4); and it compares $\mathcal T/\delta$ from the zeros with the main and prime terms of its bound;
-\item[--] \texttt{scripts/selberg\_numeric.py} computes $J(10^8,339)$ for \S\ref{sec:optimality}. Since $\theta(u+K)-\theta(u)$ is constant on each $[n,n+1)$, $J(N,K)=\sum_{n<N}(\theta(n+K)-\theta(n)-K)^2$ is a finite sum, evaluated in floating point.
+\item[--] \texttt{scripts/selberg\_numeric.py} computes $J(10^8,K)$ and $A(10^8,K)$ for \S\ref{sec:optimality}. Since $\theta(u+K)-\theta(u)$ is constant on each $[n,n+1)$, $J(N,K)=\sum_{n<N}(\theta(n+K)-\theta(n)-K)^2$ is a finite sum; both quantities are evaluated in floating point. As a check, the script compares $J$ with the right side of (25) without its $o(K^2N)$ term; the difference is at most $0.012\,K^2N$.
 \end{itemize}
 \end{itemize}
 
@@ -585,6 +595,7 @@ All computations are reproducible with the scripts accompanying this paper. They
 \bibitem{CHD} M.~Cully-Hugill, A.~Dudek, An explicit mean-value estimate for the prime number theorem in intervals, \emph{J. Aust. Math. Soc.} \textbf{117} (2024), 1--15. \url{https://doi.org/10.1017/S1446788723000113}
 \bibitem{FI} J.~Friedlander, H.~Iwaniec, \emph{Opera de Cribro}, Amer. Math. Soc. Colloq. Publ. 57, 2010.
 \bibitem{Goldston} D.~A.~Goldston, Linnik's theorem on Goldbach numbers in short intervals, \emph{Glasgow Math. J.} \textbf{32} (1990), 285--297.
+\bibitem{Hubbard} S.~Hubbard, Goldbach numbers in intervals of length $4.45\log^2x$ under the Riemann Hypothesis, Hexagon preprint hexagon:2610.00542v3 (2026). \url{https://hexagonmath.org/2610.00542v3}
 \bibitem{Katai} I.~Kátai, A remark on a paper of Ju.~V.~Linnik, \emph{Magyar Tud. Akad. Mat. Fiz. Oszt. Közl.} \textbf{17} (1967), 99--100.
 \bibitem{Linnik} Yu.~V.~Linnik, Some conditional theorems concerning the binary Goldbach problem, \emph{Izv. Akad. Nauk SSSR Ser. Mat.} \textbf{16} (1952), no.~6, 503--520.
 \bibitem{Montgomery} H.~L.~Montgomery, The pair correlation of zeros of the zeta function, in: \emph{Analytic Number Theory}, Proc. Sympos. Pure Math. 24, Amer. Math. Soc., 1973, 181--193.

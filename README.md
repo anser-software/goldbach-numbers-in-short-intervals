@@ -3,8 +3,9 @@
 [![DOI](https://zenodo.org/badge/1467471122.svg)](https://doi.org/10.5281/zenodo.24441477)
 
 **Claim (conditional on the Riemann hypothesis).** For every real x ≥ 4, the interval
-(x, x + 2 log² x] contains an even number that is a sum of two primes. The previous best
-constant was 123 (Chirre–Hagen, Res. Number Theory 2026).
+(x, x + 2 log² x] contains an even number that is a sum of two primes. The best published
+constant was 123 (Chirre–Hagen, Res. Number Theory 2026); Hubbard has since announced 4.45
+in an unrefereed preprint (Hexagon 2610.00542).
 
 > **Status: unreviewed preprint.** The work was done largely with an AI model (Claude, Anthropic).
 > RH is assumed throughout; an announced formal proof of GRH has not been independently confirmed.
