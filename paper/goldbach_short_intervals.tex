@@ -1,0 +1,595 @@
+% Draft v0.4, 22 November 2026.  Build: ~/.local/bin/tectonic -X compile goldbach_short_intervals.tex  (Tectonic 0.17.0).
+% The numbering of Theorem 1 -- Remark 14 is referenced by the Lean formalization and the README;
+% new remarks must stay unnumbered (remark*).
+\documentclass[11pt]{amsart}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs,array}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage[margin=1.1in]{geometry}
+\usepackage[colorlinks,linkcolor=blue!50!black,citecolor=green!35!black,urlcolor=blue!50!black]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem*{remark*}{Remark}
+
+\newcommand{\RH}{\mathrm{RH}}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\re}{\operatorname{Re}}
+\newcommand{\Wh}{\widehat W}
+\newcommand{\step}[1]{\smallskip\noindent\textit{#1.}\ }
+
+\setlist[enumerate]{itemsep=2pt,topsep=4pt}
+\setlist[itemize]{itemsep=2pt,topsep=4pt}
+
+\title[Goldbach numbers in short intervals]{Goldbach numbers in intervals of length $2\log^2 x$\\ under the Riemann hypothesis}
+\author{Anton Vynohradov}
+\date{Draft v0.4, 22 November 2026}
+\subjclass[2020]{Primary 11P32; Secondary 11M26, 11N05}
+\keywords{Goldbach numbers, short intervals, Riemann hypothesis, explicit formula, Selberg integral}
+
+\begin{document}
+\begin{abstract}
+Assuming the Riemann hypothesis, we prove that for every $x\ge 4$ the interval $(x,x+2\log^2x]$ contains an even integer that is a sum of two primes. The previous best constant was $123$, due to Chirre and Hagen. The improvement comes from three changes to the classical Selberg-integral argument. We pair intervals of relative length. We use a positive-definite weight on the logarithmic scale whose width grows like $\sqrt{\log x}$. And we evaluate the resulting zero sums exactly by the Weil explicit formula, which also makes the prime-power contribution negligible. The constant $2$ is the limit of every deduction we know from the Riemann hypothesis alone, and we explain why.
+\end{abstract}
+\maketitle
+
+%======================================================================
+\section{Introduction}
+
+A \emph{Goldbach number} is an even integer that is the sum of two primes. The binary Goldbach conjecture asserts that every even integer greater than $2$ is a Goldbach number. It has been verified up to $4\cdot10^{18}$~\cite{OHP} but remains open. A weaker question is how long an interval must be before it is certain to contain a Goldbach number.
+
+Under the Riemann hypothesis (RH), Linnik~\cite{Linnik} showed that $[N,N+(\log N)^{3+\varepsilon}]$ contains a Goldbach number for large $N$. Kátai~\cite{Katai} and Montgomery--Vaughan~\cite{MV} reduced the length to $C\log^2N$, and this order has not been improved under RH alone. Goldston~\cite{Goldston} gave a different deduction which, under the pair-correlation conjecture, yields $(2+\varepsilon)\log N$. Explicit values of $C$, valid for all $x\ge2$, are $9696$ (Cully-Hugill--Dudek~\cite{CHD}) and $123$ (Chirre--Hagen~\cite{CH}). Our main result is the following.
+
+\begin{theorem}\label{thm:main}
+Assume RH. For every $x\ge4$ the interval $(x,\,x+2\log^2x]$ contains a Goldbach number.
+\end{theorem}
+
+For $x<3.9\cdot10^{18}$ the theorem follows from the verification of the binary Goldbach conjecture up to $4\cdot10^{18}$~\cite{OHP} (see \S\ref{sec:proof}). The content of the paper is the range $x\ge3.9\cdot10^{18}$.
+
+\begin{remark}[The constant $2$]
+The proof gives the ratio $\mathrm{(required\ length)}/(2\log^2x)\to1$ from below, with a margin of order $\log\log x/\log x$. So $2$ is the limit of the method. In \S\ref{sec:optimality} we explain that Goldston's deduction~\cite{Goldston} reaches the same limit from the same RH input. Going below $2$ is equivalent to an RH-only improvement of the mean-square bound for primes in intervals of length $\asymp\log^2x$, or of averaged prime-pair counts at such shifts.
+\end{remark}
+
+\begin{remark}[Fixed kernel]
+With a kernel of fixed width ($V=28$ below) the same argument gives the constant $2.05$, with a margin of about $22\%$ at $x=4\cdot10^{18}$ and $0.2\%$ as $x\to\infty$. We do not give details.
+\end{remark}
+
+\subsection{The classical argument and what we change}
+All the explicit results above rest on the same idea. If $(x,x+H]$ contains no Goldbach number, then for every $y$ one of two short intervals, one near $y$ and one near $x-y$, contains no prime. A prime-free interval of length $\delta y$ contributes $\delta^2y^2$ to the Selberg integral
+\[
+\int\big(\theta((1+\delta)y)-\theta(y)-\delta y\big)^2\dd y ,
+\]
+whereas RH bounds this integral from above. Comparing the two bounds gives a contradiction once $H$ is large enough.
+
+Chirre and Hagen bound the Selberg integral by
+\[
+\int_{ax}^x(\theta((1+\delta)y)-\theta(y)-\delta y)^2\dd y\le K\delta x^2\log^2(2.0001/\delta),\qquad K=2.5571
+\]
+\cite[Thm.~3]{CH}. They then use the Montgomery--Vaughan covering, which pairs intervals of absolute length $h/2$ and integrates the prime-free deficit $\delta^2y^2$ against Lebesgue measure. This gives $C=48K$. We remove three losses in this argument.
+\begin{enumerate}[label=(\arabic*)]
+\item \emph{Relative intervals.} If $p\in(y,(1+\delta)y]$ and $q\in(x-y,(1+\delta)(x-y)]$, then $p+q\in(x,(1+\delta)x]$. So relative intervals with $\delta=H/x$ suffice, which saves a factor $2$.
+\item \emph{A weight that matches the deficit.} The deficit $\delta^2y^2$ is tiny for small $y$, while the unweighted integral is dominated by $y\approx x$. The weight $\omega(y)=(x/y)^2W(\log(x/y))$ makes the deficit uniform. This saves the factor $24=1/\int_0^{1/2}u^2\dd u$, up to $\int_{\log2}^\infty W(v)e^{-v}\dd v\le\tfrac12$.
+\item \emph{Exact evaluation of the zero sum.} With $W$ positive definite, Schur's test and the Weil explicit formula evaluate the zero double sum exactly, up to explicit remainders. The prime terms of the explicit formula, averaged over the zeros, contribute the positive cost $2\delta\sum_n\Lambda(n)^2W(\log n)/n\approx2\delta\int_0^VvW$. This cost is $O(V^2)=o(\log^2x)$ when $V\asymp\sqrt{\log x}$. The weight also kills prime powers below $xe^{-V}$, so the difference between $\theta$ and $\psi$ becomes negligible.
+\end{enumerate}
+
+\subsection{Outline}
+Section~\ref{sec:kernel} constructs the weight $W$ and lists its properties. Section~\ref{sec:cover} turns the absence of Goldbach numbers into a lower bound for a weighted Selberg integral (Lemma~\ref{lem:cover}). Sections~\ref{sec:schur}--\ref{sec:arith} bound the same integral from above under RH. The explicit formula splits it into a sum over zeros, a small term from the trivial zeros and a prime-power term (\S\ref{sec:schur}). The sum over zeros is evaluated with the Weil explicit formula (\S\ref{sec:weil}) and Stieltjes integration against the zero-counting function (\S\ref{sec:main}). Section~\ref{sec:arith} collects the arithmetic input. Section~\ref{sec:proof} combines the bounds and proves Theorem~\ref{thm:main}. Section~\ref{sec:optimality} explains why the constant $2$ is the limit of the method. Appendix~\ref{app:comp} lists the computations.
+
+\subsection{Notation}
+Throughout, $p$ denotes a prime and $\Lambda$ is the von Mangoldt function. The Chebyshev functions are $\theta(t)=\sum_{p\le t}\log p$ and $\psi(t)=\sum_{n\le t}\Lambda(n)$. Under RH we write the nontrivial zeros of $\zeta$ as $\rho=\frac12+i\gamma$. Sums over $\rho$ or $\gamma$ run over all nontrivial zeros, of both signs, counted with multiplicity. We write $\gamma_E$ for Euler's constant. The Fourier transform is $\widehat f(\xi)=\int f(v)e^{-iv\xi}\dd v$.
+
+%======================================================================
+\section{The kernel}\label{sec:kernel}
+
+The argument needs a weight $W$ on the logarithmic scale with three properties. It should have compact support $[-V,V]$, so that only primes up to $e^V$ enter the explicit formula. It should be positive definite, $\Wh\ge0$, so that Schur's test applies in Lemma~\ref{lem:schur}. And it should be flat near $0$, so that the cover in Lemma~\ref{lem:cover} loses little. The autocorrelation of a cosine bump has all three.
+
+Fix $V>0$. Let $\varphi(s)=\cos(\pi s/V)$ for $|s|\le V/2$ and $\varphi(s)=0$ otherwise, and put $W=\varphi*\varphi/\|\varphi\|_2^2$. A direct computation gives, with $t=|v|/V$,
+\begin{equation}\label{eq:W}
+W(v)=(1-t)\cos(\pi t)+\frac{\sin(\pi t)}{\pi}\quad(|v|\le V),\qquad W(v)=0\quad(|v|>V).
+\end{equation}
+Write $\Wh(\xi)=\int W(v)e^{-iv\xi}\dd v$ and $\sigma=\pi/V$.
+
+\begin{lemma}\label{lem:kernel}
+\begin{enumerate}
+\item[(i)] $W$ is even, $W(0)=1$, $W$ is nonincreasing on $[0,V]$, and $0\le W\le1$.
+\item[(ii)] $\Wh=|\widehat\varphi|^2/\|\varphi\|^2\ge0$, $(2\pi)^{-1}\int\Wh=1$ and $(2\pi)^{-1}\int\xi^2\Wh(\xi)\dd\xi=-W''(0)=\sigma^2$.
+\item[(iii)] $|W'|\le\sigma$, $|W''|\le\sigma^2$, and $W(\pm V)=W'(\pm V)=0$. Moreover $W\in C^2$ and $W'''$ has bounded variation, so $\Wh(\xi)\ll_V(1+|\xi|)^{-4}$.
+\item[(iv)] \textup{(K1)} $W(v)\ge1-\pi^2v^2/(2V^2)$ for $0\le v\le V$.
+\item[(v)] \textup{(K2)} $2\int_0^VvW(v)\dd v=2V^2/\pi^2$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) From \eqref{eq:W}, $\frac{\dd W}{\dd t}=-\pi(1-t)\sin\pi t\le0$ on $[0,1]$, and $W(V)=0$.
+
+(ii) This is standard for an autocorrelation.
+
+(iii) We have $W'=\pm\varphi*\varphi'/\|\varphi\|^2$ and $W''=-\varphi'*\varphi'/\|\varphi\|^2$ (with the appropriate reflections), so Cauchy--Schwarz gives the bounds with $\|\varphi'\|/\|\varphi\|=\sigma$. The boundary values follow from \eqref{eq:W}.
+
+(iv) Put $f(t)=W-1+\pi^2t^2/2$. Then $f(0)=0$ and $f'(t)=\pi(\pi t-(1-t)\sin\pi t)\ge0$.
+
+(v) Use $\int_0^1t\cos\pi t=\int_0^1t^2\cos\pi t=-2/\pi^2$ and $\int_0^1t\sin\pi t=1/\pi$.
+\end{proof}
+
+The cover in the next section produces the following quantity.
+
+\begin{corollary}\label{cor:m}
+$m_W:=\int_{\log2}^{V}W(v)e^{-v}\dd v\ \ge\ \tfrac12-9.55\,V^{-2}-e^{-V}$.
+\end{corollary}
+\begin{proof}
+By (K1), $m_W\ge\tfrac12-e^{-V}-\frac{\pi^2}{2V^2}\int_{\log2}^\infty v^2e^{-v}\dd v$. The last integral equals $\frac12(\log^22+2\log2+2)=1.9334\ldots$, and $\frac{\pi^2}{2}\cdot1.9334<9.55$.
+\end{proof}
+
+%======================================================================
+\section{The weighted cover}\label{sec:cover}
+
+Throughout, $x$ is large, $H>0$, $\delta=H/x$, $\ell=\log(1+\delta)$, and
+\[
+V_\theta(y)=\theta((1+\delta)y)-\theta(y)-\delta y,\qquad \omega(y)=\Big(\frac xy\Big)^2W\Big(\log\frac xy\Big),\qquad \|F\|_\omega^2=\int_0^\infty|F(y)|^2\omega(y)\dd y.
+\]
+The next lemma shows that if $(x,x+H]$ contains no Goldbach number, then the weighted Selberg integral $\|V_\theta\|_\omega^2$ is large.
+
+\begin{lemma}\label{lem:cover}
+Suppose $xe^{-V}>2$ and that $(x,x+H]$ contains no Goldbach number. Then $\|V_\theta\|_\omega^2\ge\delta^2x^3m_W$.
+\end{lemma}
+
+\begin{proof}
+Let $y_0=xe^{-V}$ and $y_0\le y\le x/2$. Primes in $(y,(1+\delta)y]$ and in $(x-y,(1+\delta)(x-y)]$ would be odd, and their sum would be an even number in $(x,x+H]$. So for at least one $z\in\{y,x-y\}$ the interval $(z,(1+\delta)z]$ contains no prime, and $V_\theta(z)=-\delta z$. Then
+\[
+V_\theta(z)^2\omega(z)=\delta^2x^2W(\log(x/z)).
+\]
+Since $y\le z\le x$ and $W$ is nonincreasing on $[0,\infty)$, this is at least $\delta^2x^2W(\log(x/y))$. The pairs $\{y,x-y\}$ with $y\in[y_0,x/2]$ are disjoint up to the midpoint. Summing over them gives
+\[
+\|V_\theta\|_\omega^2\ \ge\ \delta^2x^2\int_{y_0}^{x/2}W(\log(x/y))\dd y=\delta^2x^3\int_{\log2}^{V}W(v)e^{-v}\dd v.\qedhere
+\]
+\end{proof}
+
+%======================================================================
+\section{The explicit formula and the Schur bound}\label{sec:schur}
+
+We now bound $\|V_\theta\|_\omega$ from above. Under RH, the explicit formula splits $V_\theta$ into a sum over the nontrivial zeros, a small term coming from the trivial zeros and a prime-power term. We bound each of the three in turn.
+
+Assume RH. Put
+\[
+c(r)=\frac{(1+\delta)^{1/2+ir}-1}{1/2+ir}=\int_0^\ell e^{(1/2+ir)t}\dd t .
+\]
+Then $|c(r)|\le\ell e^{\ell/2}$ for real $r$. By the explicit formula for $\psi$, in the form of~\cite[eq.~(3.2)]{CH}, for $y>1$ such that neither $y$ nor $(1+\delta)y$ is an integer,
+\[
+V_\theta(y)=A(y)+B(y)-P(y),\qquad A(y)=-\sum_\rho c(\gamma)y^\rho,
+\]
+where the sum is the symmetric limit and
+\[
+B(y)=\tfrac12\log(1-y^{-2})-\tfrac12\log(1-(1+\delta)^{-2}y^{-2}),\qquad P(y)=\sum_{k\ge2}\ \sum_{p^k\in(y,(1+\delta)y]}\log p .
+\]
+
+\begin{lemma}\label{lem:schur}
+$\|A\|_\omega^2\le x^2\,\mathcal T$, where $\mathcal T=\sum_\gamma|c(\gamma)|^2R(\gamma)$ and $R(\gamma)=\sum_{\gamma'}\Wh(\gamma-\gamma')$.
+\end{lemma}
+
+\begin{proof}
+Let $A_D$ be the truncation of $A$ to $|\gamma|\le D$. With $y=xe^{-v}$ we have $A_D(y)=-\sqrt y\,S_D(v)$, where $S_D(v)=\sum_{|\gamma|\le D}c(\gamma)x^{i\gamma}e^{-i\gamma v}$, and $\omega(y)\dd y=x^2y^{-1}W(v)\dd v$. Hence
+\[
+\|A_D\|_\omega^2=x^2\int W|S_D|^2\dd v=x^2\sum_{|\gamma|,|\gamma'|\le D}c(\gamma)\overline{c(\gamma')}x^{i(\gamma-\gamma')}\Wh(\gamma-\gamma').
+\]
+Since $\Wh\ge0$ is even, the inequality $2|ab|\le|a|^2+|b|^2$ bounds this by $x^2\sum_{|\gamma|\le D}|c(\gamma)|^2R(\gamma)$. Now $A_D\to A$ almost everywhere, and Fatou's lemma gives the claim. The sum $\mathcal T$ is finite by Lemma~\ref{lem:R} and $c(\gamma)\ll\gamma^{-1}$.
+\end{proof}
+
+\begin{lemma}\label{lem:BP}
+If $y_0=xe^{-V}\ge3$ then $\|B\|_\omega^2\le\frac45\delta^2x^2y_0^{-5}$.
+\end{lemma}
+\begin{proof}
+For $y\ge3$,
+\[
+|B(y)|\le\frac12\cdot\frac{(1-(1+\delta)^{-2})y^{-2}}{1-y^{-2}}\le2\delta y^{-2}.
+\]
+Also $\omega(y)\le(x/y)^2$, and $\omega=0$ for $y<y_0$.
+\end{proof}
+
+The prime-power term $P$ is treated in the proof of Proposition~\ref{prop:table}.
+
+%======================================================================
+\section{Evaluation of $R(\gamma)$ and of the averaged prime terms}\label{sec:weil}
+
+Lemma~\ref{lem:schur} reduces the problem to the sums $R(\gamma)$ of $\Wh$ over zeros. Because $\Wh$ is the Fourier transform of a function supported in $[-V,V]$, the Weil explicit formula evaluates $R(\gamma)$ in terms of the primes up to $e^V$.
+
+We use the explicit formula in the form of~\cite[Prop.~2.1]{RS}. Let $g$ be continuous with compact support, and let $h(r)=\int g(u)e^{iru}\dd u$, so that $g(u)=(2\pi)^{-1}\int h(r)e^{-iru}\dd r$. Suppose that $h(r)\ll(1+|r|)^{-1-\varepsilon}$ for real $r$. Then
+\begin{equation}\label{eq:weil}
+\sum_\rho h(\gamma)=h(\tfrac i2)+h(-\tfrac i2)+\frac1{2\pi}\int h(r)\,\Omega(r)\dd r-\sum_{n\ge2}\frac{\Lambda(n)}{\sqrt n}\big(g(\log n)+g(-\log n)\big),
+\end{equation}
+with $\Omega(r)=\re\psi(\frac14+\frac{ir}2)-\log\pi$. In this formula only, $\psi$ denotes the digamma function.
+
+Rudnick and Sarnak state \eqref{eq:weil} for $g\in C_c^\infty(\mathbb R)$; evenness is not required. For continuous compactly supported $g$ we argue by smoothing. Apply \eqref{eq:weil} to $g_\eta=g*\phi_\eta$, where $\phi_\eta(u)=\eta^{-1}\phi(u/\eta)$ for a fixed even $\phi\in C_c^\infty$ with $\int\phi=1$. Then $h_\eta=h\,\widehat\phi(\eta\,\cdot)$ with $|\widehat\phi|\le1$, and $\widehat\phi(\eta z)\to1$ for every complex $z$. As $\eta\to0$, the sum over zeros and the integral converge by dominated convergence, since $\sum_\gamma(1+|\gamma|)^{-1-\varepsilon}<\infty$. The prime sum has boundedly many terms and converges because $g_\eta\to g$ uniformly. Both test functions used below are of this type.
+
+\begin{lemma}\label{lem:R}
+For real $\gamma$,
+\[
+R(\gamma)=G(\gamma)+\Wh(\gamma-\tfrac i2)+\Wh(\gamma+\tfrac i2)-2\sum_{n\ge2}\frac{\Lambda(n)}{\sqrt n}W(\log n)\cos(\gamma\log n),
+\]
+where $G(\gamma)=(2\pi)^{-1}\int\Wh(\gamma-r)\Omega(r)\dd r$ satisfies
+\[
+G(\gamma)\le\log\frac{|\gamma|}{2\pi}+\frac{1/4+\sigma^2}{2\gamma^2}.
+\]
+Moreover $|\Wh(\gamma\pm\frac i2)|\le2(\sigma^2+\sigma+\frac14)e^{V/2}\gamma^{-2}$.
+\end{lemma}
+
+\begin{proof}
+Take $h(r)=\Wh(\gamma-r)$ in \eqref{eq:weil}. Then $g(u)=e^{-i\gamma u}W(u)$, $g(0)=1$, and $g(\log n)+g(-\log n)=2W(\log n)\cos(\gamma\log n)$. This gives the identity.
+
+For the bound on $G$, Chandee~\cite[Lemma~2.3]{Chandee} gives $\re\psi(z)\le\log|z|$ for $\re z\ge\frac14$, so $\Omega(r)\le\frac12\log(r^2+\frac14)-\log2\pi$. By Lemma~\ref{lem:kernel}(ii), $\Wh(\gamma-\cdot)/2\pi$ is a probability density with mean $\gamma$ and variance $\sigma^2$. Jensen's inequality for the concave logarithm gives $G(\gamma)\le\frac12\log(\gamma^2+\sigma^2+\frac14)-\log2\pi$, and $\log(1+u)\le u$ finishes.
+
+For the pole terms, integrate by parts twice in $\int W(u)e^{\pm u/2}e^{-i\gamma u}\dd u$. There are no boundary terms by Lemma~\ref{lem:kernel}(iii), and $\int_{-V}^Ve^{\pm u/2}\le2e^{V/2}$.
+\end{proof}
+
+After inserting Lemma~\ref{lem:R} into $\mathcal T$, the prime terms are averaged over the zeros with weights $|c(\gamma)|^2$. The next lemma evaluates these averages, again by the explicit formula.
+
+\begin{lemma}[Averaged prime terms]\label{lem:En}
+Suppose $\delta\le1/100$, $\delta e^V<1$ and $2\le n\le e^V$. Then
+\[
+\sum_\gamma|c(\gamma)|^2\cos(\gamma\log n)=-\frac{\delta\Lambda(n)}{\sqrt n}+E_n,\qquad |E_n|\le\delta^2\Big(\sqrt n+\frac{2.4}{\sqrt n}\Big).
+\]
+\end{lemma}
+
+\begin{proof}
+For real $r$, $|c(r)|^2=c(r)c(-r)=\int\kappa(u)e^{iru}\dd u$, where
+\[
+\kappa(u)=e^{\ell-|u|/2}-e^{|u|/2}\ (|u|\le\ell),\qquad \kappa(u)=0\ (|u|>\ell)
+\]
+is the autocorrelation of $e^{t/2}\mathbf 1_{[0,\ell]}$. So $\kappa\ge0$ and $\kappa(0)=e^\ell-1=\delta$. Apply \eqref{eq:weil} to $h_n(r)=c(r)c(-r)\cos(r\log n)$, whose Fourier side is $g_n(u)=\frac12(\kappa(u-\log n)+\kappa(u+\log n))$. We treat the three terms of \eqref{eq:weil} separately.
+
+\step{Primes} Since $\ell<\log2$, the prime term is exactly $-\sum_m\Lambda(m)m^{-1/2}\kappa(\log(m/n))$. Because $\delta n\le\delta e^V<1$, the interval $[n/(1+\delta),n(1+\delta)]$ contains no integer other than $n$. So only $m=n$ contributes, giving $-\delta\Lambda(n)/\sqrt n$.
+
+\step{Poles} We have $c(\frac i2)=\ell$ and $c(-\frac i2)=\delta$, so $h_n(\pm\frac i2)=\ell\delta\cosh(\frac12\log n)$. Together the two poles give $\ell\delta(\sqrt n+1/\sqrt n)$.
+
+\step{Archimedean term} From $\psi(z)=\int_0^\infty(e^{-s}/s-e^{-zs}/(1-e^{-s}))\dd s$, the oscillatory part of $\Omega$ is $-\int_{\mathbb R}q(\xi)e^{ir\xi}\dd\xi$ with $q(\xi)=e^{-|\xi|/2}/(1-e^{-2|\xi|})$. Since $g_n$ vanishes near $0$, the constant and the subtraction at $\xi=0$ drop out. The term therefore equals $-\int_{-\ell}^{\ell}\kappa(u)\,q(\log n+u)\dd u$. Since $\int\kappa(u)e^{-u/2}\dd u=c(\frac i2)c(-\frac i2)=\ell\delta$ and $\ell\le1/100$, its modulus is at most
+\[
+\ell\delta n^{-1/2}(1-e^{2\ell}/n^2)^{-1}\le\ell\delta n^{-1/2}(1-e^{2\ell}/4)^{-1}\le1.4\,\ell\delta n^{-1/2}.
+\]
+
+Since $\ell\le\delta$, the three contributions together give the claim.
+\end{proof}
+
+%======================================================================
+\section{The main zero sum}\label{sec:main}
+
+After Lemma~\ref{lem:R}, the largest part of $\mathcal T$ is $\sum_\gamma|c(\gamma)|^2\log(|\gamma|/2\pi)$. We evaluate it by Stieltjes integration against the zero-counting function. The main term reduces to a Mellin-type integral of $(\sin s/s)^2$, whose moments are given by the constants below.
+
+Let $a_1=1-\gamma_E-\log2$ and $a_2=a_1^2+1+\pi^2/12=1.8955631016\ldots$. These are $M'(0)$ and $M''(0)$ for
+\[
+M(q)=\frac2\pi\int_0^\infty s^q\Big(\frac{\sin s}s\Big)^2\dd s=\frac{2^{-q}}{\Gamma(2-q)\cos(\pi q/2)}\qquad(-1<q<1).
+\]
+
+\begin{lemma}\label{lem:main}
+Assume RH and $\delta\le1/100$. Put $\Lambda_1=\log(1/(\pi\ell))$ and $\Lambda=\log(1/\ell)$. Then
+\[
+\sum_\gamma|c(\gamma)|^2\log\frac{|\gamma|}{2\pi}\ \le\ \ell\sqrt{1+\delta}\,\big(\Lambda_1^2+2a_1\Lambda_1+a_2\big)+\delta^2\Big[\tfrac83\Lambda^3+33\Lambda^2+136\Lambda+250\Big]+0.081\,\delta^2.
+\]
+\end{lemma}
+
+\begin{proof}
+Put $b=e^{\ell/2}=\sqrt{1+\delta}\le1.005$, $m(t)=\log(t/2\pi)$ and $f(t)=|c(t)|^2m(t)$. Since $c(-t)=\overline{c(t)}$ and every zero has $|\gamma|>14$~\cite[Thm.~5.1]{Platt}, the sum equals $2\sum_{\gamma>0}f(\gamma)$, and every term is positive.
+
+\step{Step 1: two formulas for $|c|^2$} Since $(1+\delta)^{1/2+it}=be^{it\ell}$ and $|be^{i\theta}-1|^2=(b-1)^2+4b\sin^2(\theta/2)$,
+\begin{equation}\label{eq:c2}
+|c(t)|^2=\frac{(b-1)^2+4b\sin^2(t\ell/2)}{t^2+\frac14},\qquad (b-1)^2=\frac{\delta^2}{(b+1)^2}\le\frac{\delta^2}4 .
+\end{equation}
+Also $|c(t)|^2=\int\kappa(u)e^{itu}\dd u$, where $\kappa\ge0$ is the function of Lemma~\ref{lem:En}, supported in $[-\ell,\ell]$. Hence
+\[
+|c(t)|^2\le\int\kappa=|c(0)|^2=4(b-1)^2\le\ell^2e^{\ell}=(1+\delta)\ell^2,\qquad \big|(|c|^2)'(t)\big|\le\int|u|\kappa(u)\dd u\le\ell(1+\delta)\ell^2.
+\]
+
+\step{Step 2: Stieltjes integration} Let $N(t)$ count the zeros with $0<\gamma\le t$, with multiplicity, and write $N=N_0+Q$ with $N_0(t)=\frac t{2\pi}\log\frac t{2\pi e}+\frac78$. Trudgian~\cite[Cor.~1]{Trudgian} gives $|Q(t)|\le0.112\log t+0.278\log\log t+2.510+0.2/t$ for $t\ge e$. This implies
+\begin{equation}\label{eq:Q}
+|Q(t)|\le q(t):=\log t+4\qquad(t\ge e).
+\end{equation}
+Since $N(14)=0$ and $f(t)N(t)\ll t^{-1}\log^2t\to0$, integration by parts gives
+\[
+\sum_{\gamma>0}f(\gamma)=\int_{14}^\infty f\dd N=\int_{14}^\infty f(t)N_0'(t)\dd t+N_0(14)f(14)-\int_{14}^\infty Q(t)f'(t)\dd t ,
+\]
+with $N_0'(t)=m(t)/2\pi$ and $|N_0(14)|\le0.44$.
+
+\step{Step 3: the main integral} By \eqref{eq:c2} and $t^2+\frac14\ge t^2$, $2\int_{14}^\infty fN_0'$ is at most
+\[
+\frac{4b}\pi\int_{14}^\infty\frac{\sin^2(t\ell/2)}{t^2}m(t)^2\dd t+\frac{(b-1)^2}\pi\int_{14}^\infty\frac{\log^2t}{t^2}\dd t .
+\]
+The first integrand is nonnegative on $(0,\infty)$ and integrable at $0$. Extend the integral to $(0,\infty)$ and substitute $s=t\ell/2$, so that $m(t)=\Lambda_1+\log s$. This bounds the first term by
+\begin{align*}
+b\ell\,\frac2\pi\int_0^\infty\Big(\frac{\sin s}s\Big)^2(\Lambda_1+\log s)^2\dd s&=b\ell\big(M(0)\Lambda_1^2+2M'(0)\Lambda_1+M''(0)\big)\\
+&=b\ell(\Lambda_1^2+2a_1\Lambda_1+a_2).
+\end{align*}
+Here $M(0)=1$, and the values $M'(0)=a_1$, $M''(0)=a_2$ follow from
+\[
+(\log M)'(0)=\frac{\Gamma'}{\Gamma}(2)-\log2=1-\gamma_E-\log2,\qquad (\log M)''(0)=\frac{\pi^2}4-\Big(\frac{\Gamma'}{\Gamma}\Big)'(2)=1+\frac{\pi^2}{12}.
+\]
+The closed form of $M$ follows from $\int_0^\infty s^{\mu-1}\sin^2s\dd s=-2^{-\mu-1}\Gamma(\mu)\cos(\pi\mu/2)$ for $-2<\mu<0$, with $\mu=q-1$, and the reflection formula; the value at $q=0$ follows by continuity. The second term is at most $\frac{\delta^2}{4\pi}\cdot\frac{\log^214+2\log14+2}{14}<0.081\,\delta^2$.
+
+\step{Step 4: the derivative of $f$} We have $f'=(|c|^2)'m+|c|^2/t$ and $0<m(t)\le\log t$. Consider first $14\le t\le1/\ell$, a nonempty range since $\ell\le\delta\le1/100$. There the bounds of Step~1 and $\ell\le1/t$ give
+\[
+|f'(t)|\le(1+\delta)\ell^3\log t+(1+\delta)\ell^2/t\le(1+\delta)\ell^2(\log t+1)/t .
+\]
+For $t>1/\ell$, write $|c|^2=n/d$ with $n=1+b^2-2b\cos(t\ell)\le(1+b)^2$, $|n'|\le2b\ell$ and $d=t^2+\frac14$. Then $\big|(|c|^2)'\big|\le|n'|/d+n\,d'/d^2\le2b\ell/t^2+2(1+b)^2/t^3$, so
+\[
+|f'(t)|\le\Big(\frac{2.01\,\ell}{t^2}+\frac{10}{t^3}\Big)(\log t+1).
+\]
+The coefficient of $\ell/t^2$ cannot be taken below $2b$. Indeed, along the points $t_k=(\pi/2+2\pi k)/\ell$ the ratio $t_k^2|f'(t_k)|/(\ell\log t_k)$ tends to $2b$.
+
+\step{Step 5: the error terms} By \eqref{eq:Q}, the last two terms of the Stieltjes formula, doubled, are at most $2|N_0(14)|f(14)+2\int_{14}^\infty q|f'|$. First, $f(14)\le(1+\delta)\ell^2m(14)\le0.81(1+\delta)\ell^2$. On $[14,1/\ell]$, with $z=\log t$,
+\[
+\int_{14}^{1/\ell}q|f'|\le(1+\delta)\ell^2\int_0^\Lambda(z+4)(z+1)\dd z=(1+\delta)\ell^2\Big(\frac{\Lambda^3}3+\frac52\Lambda^2+4\Lambda\Big).
+\]
+On $[1/\ell,\infty)$ substitute $t=e^z/\ell$, so that $\log t=z+\Lambda$, $\ell\dd t/t^2=\ell^2e^{-z}\dd z$ and $\dd t/t^3=\ell^2e^{-2z}\dd z$:
+\[
+\int_{1/\ell}^\infty q|f'|\le\ell^2\int_0^\infty(z+\Lambda+4)(z+\Lambda+1)\big(2.01e^{-z}+10e^{-2z}\big)\dd z=\ell^2\big(7.01\Lambda^2+44.07\Lambda+57.11\big).
+\]
+With $\ell\le\delta$ and $1+\delta\le1.01$, the error terms total at most $\delta^2\big[0.68\Lambda^3+19.1\Lambda^2+96.3\Lambda+115\big]$, which is less than the bracket in the statement. Collecting Steps~3 and~5 proves the lemma.
+\end{proof}
+
+%======================================================================
+\section{Arithmetic input}\label{sec:arith}
+
+We need three explicit inequalities. Each is checked by computation up to $10^7$ and by Schoenfeld's RH bound beyond.
+
+\begin{lemma}\label{lem:arith}
+Assume RH.
+\begin{enumerate}
+\item[(L2)] $\sum_{n\le t}\Lambda(n)^2/n\le\frac12\log^2t+0.04$ for all $t\ge1$.
+\item[(L3)] $\theta(t)<1.01624\,t$ for all $t>0$.
+\item[(L4)] $\sum_\gamma\gamma^{-2}\le0.12$, the sum being over all nontrivial zeros.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+All numerical values below are computed in interval arithmetic (Appendix~\ref{app:comp}). Let $U_0=10^7$ and $S(t)=\sum_{n\le t}\Lambda(n)^2/n$.
+
+\step{(L2) and (L3) for $t\le U_0$} Between consecutive prime powers $S(t)-\frac12\log^2t$ decreases, and between consecutive primes $\theta(t)/t$ decreases. So the two suprema are attained at prime powers and at primes, respectively, and an exact sieve gives
+\[
+\sup_{1\le t\le U_0}\Big(S(t)-\tfrac12\log^2t\Big)=0.0390683\ldots\ \ (\text{at }t=3),\qquad \max_{p\le U_0}\frac{\theta(p)}p=0.99981\ldots .
+\]
+For $t>U_0$ we use Schoenfeld's bound~\cite[Thm.~10, (6.2)]{Schoenfeld}, valid under RH:
+\[
+|E(u)|\le\frac{\sqrt u\,\log^2u}{8\pi}\qquad(u\ge73.2),\qquad E(u)=\psi(u)-u .
+\]
+
+\step{(L3) for $t>U_0$} Here $\theta(t)/t\le\psi(t)/t\le1+\log^2t/(8\pi\sqrt t)$. The right side decreases for $\log t>4$ and equals $1.0033\ldots$ at $U_0$.
+
+\step{(L2) for $t>U_0$} Use $\Lambda(n)^2\le\Lambda(n)\log n$ and partial summation against $\psi$ on $(U_0,t]$:
+\[
+\sum_{U_0<n\le t}\frac{\Lambda(n)\log n}n=\frac{\log^2t-\log^2U_0}2+\frac{E(t)\log t}t-\frac{E(U_0)\log U_0}{U_0}+\int_{U_0}^t\frac{E(u)(\log u-1)}{u^2}\dd u .
+\]
+Bound $E(t)\log t/t\le\log^3t/(8\pi\sqrt t)\le\log^3U_0/(8\pi\sqrt{U_0})$, and bound the integral by
+\[
+\frac1{8\pi}\int_{U_0}^\infty u^{-3/2}(\log^3u-\log^2u)\dd u,
+\]
+which has a closed form. With the exact values of $S(U_0)$ and $\psi(U_0)$ this gives $S(t)\le\frac12\log^2t-1.37$ for $t>U_0$.
+
+\step{(L4)} There are no zeros with $|\gamma|\le14$, so $N(14)=0$. Since $N(t)/t^2\to0$,
+\[
+\sum_\gamma\gamma^{-2}=2\int_{14}^\infty t^{-2}\dd N(t)=4\int_{14}^\infty N(t)t^{-3}\dd t .
+\]
+Insert $N\le N_0+\log t+4$, from \eqref{eq:Q} in the proof of Lemma~\ref{lem:main}. Every resulting integral has a closed form, and the total is $0.1182\ldots$. (The true value is about $0.046$.)
+\end{proof}
+
+%======================================================================
+\section{Proof of Theorem~\ref{thm:main}}\label{sec:proof}
+
+\subsection{Small $x$} For $4\le x<3.9\cdot10^{18}$ the interval $(x,x+2\log^2x]$ has length greater than $2$. It therefore contains an even $N$ with $6\le N<4\cdot10^{18}$, and $N$ is a Goldbach number by~\cite{OHP}.\footnote{The authors of~\cite{OHP} double-checked the whole range up to $3\cdot10^{17}$. Beyond that they double-checked about $4\%$ of the intervals, compared prime counts in residue classes modulo $120$ with an independent program for every interval of $10^{15}$ integers, and found no discrepancy~\cite[\S1]{OHP}.}
+
+\subsection{Large $x$: setup} Let $x\ge3.9\cdot10^{18}$, and put
+\[
+L=\log x\ge L_0=42.8075,\qquad H=2L^2,\qquad \delta=2L^2/x,\qquad V=3\sqrt L .
+\]
+One checks that
+\begin{equation}\label{eq:cond}
+L-V-4\log L-\log2>0;
+\end{equation}
+the left side equals $7.46$ at $L_0$ and increases with $L$. Condition \eqref{eq:cond} implies $\delta e^V<1$, $\ell<1/14$, $xe^{-V}\ge3$, and that each interval $(y,(1+\delta)y]$ with $y\le2xe^V$ contains at most one $k$-th power for each $k$.
+
+Suppose $(x,x+H]$ contains no Goldbach number. By Lemmas~\ref{lem:cover}, \ref{lem:schur}, \ref{lem:BP} and the triangle inequality,
+\begin{equation}\label{eq:star}
+\delta^2x^3m_W\le\|V_\theta\|_\omega^2\le\big(\|A\|_\omega+\|B\|_\omega+\|P\|_\omega\big)^2\le\delta x^2\big(\sqrt{\mathcal T/\delta}+\sqrt{\mathcal E}+\sqrt{\mathcal B}\big)^2,
+\end{equation}
+where $\mathcal E=\|P\|_\omega^2/(\delta x^2)$ and $\mathcal B=\|B\|_\omega^2/(\delta x^2)$. Only the first inequality uses the assumption on $(x,x+H]$. Since $\delta x=2L^2$, a contradiction follows once
+\begin{equation}\label{eq:target}
+\big(\sqrt{\mathcal T/\delta}+\sqrt{\mathcal E}+\sqrt{\mathcal B}\big)^2<2L^2m_W .
+\end{equation}
+
+\subsection{The bounds} We bound each quantity in \eqref{eq:target}.
+
+\begin{proposition}\label{prop:table}
+Under the above assumptions, $\mathcal T/\delta\le T_{\rm main}+T_{\rm pr}+R_T$, and $\mathcal E$, $\mathcal B$, $m_W$ satisfy the bounds of Table~\ref{tab:rem}, with $\Lambda_1^0=L-2\log L-\log2\pi$.
+\end{proposition}
+
+\begin{table}[ht]
+\centering\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}>{\raggedright}p{3.7cm}>{\raggedright}p{7.3cm}>{\raggedright\arraybackslash}p{2.6cm}@{}}
+\toprule
+Quantity & Upper bound & Source\\
+\midrule
+$T_{\rm main}$ & $(\Lambda_1^0+a_1)^2+(a_2-a_1^2)$ & Lemma~\ref{lem:main}\\
+$T_{\rm pr}$ & $2V^2/\pi^2+0.08=18L/\pi^2+0.08$ & Lemmas~\ref{lem:R}, \ref{lem:En}; (K2); (L2)\\
+\midrule
+$R_T$: shift $\Lambda_1\to\Lambda_1^0$ and factor $\ell\sqrt{1+\delta}/\delta$ & $\delta(L^2+3L)$ & Lemma~\ref{lem:main}\\
+$R_T$: $N(T)$ and $(b-1)^2$ pieces & $\delta\big[\frac83L^3+33L^2+136L+250\big]+0.1\delta$ & Lemma~\ref{lem:main}\\
+$R_T$: Jensen term & $0.06\,\delta(1+\delta)(\frac14+\sigma^2)$ & Lemma~\ref{lem:R}; (L4)\\
+$R_T$: $E_n$ terms & $2.02\,\delta\big[e^V+\frac{e^{V/2}V^2}{8\pi}+\frac{2.4(V^2/2+0.04)}{\log2}\big]$ & Lemma~\ref{lem:En}; \cite{Schoenfeld}; (L2)\\
+$R_T$: pole terms & $0.5\,\delta(1+\delta)(\sigma^2+\sigma+\frac14)e^{V/2}$ & Lemma~\ref{lem:R}; (L4)\\
+\midrule
+$\mathcal E$ & $\frac{L+V+1}{\log2}(1+\delta)\cdot1.01624\,\big[(\ell_y+2)e^{-\ell_y/2}$\newline
+\hspace*{1.5em}$+\frac{\ell_y}{\log2}\big(\frac{\ell_y}2+\frac34\big)e^{-2\ell_y/3}+3\,e^{-\ell_y}\big]$ & (L3); \eqref{eq:cond}\\
+$\mathcal B$ & $0.8\,\delta e^{-5(L-V)}$ & Lemma~\ref{lem:BP}\\
+$m_W$ (lower bound) & $\frac12-9.55V^{-2}-e^{-V}$ & Corollary~\ref{cor:m}\\
+\bottomrule
+\end{tabular}
+\caption{Explicit bounds; $\ell_y=L-V$. The five $R_T$ rows sum to $R_T$.}\label{tab:rem}
+\end{table}
+
+\begin{proof}[Proof of Proposition~\ref{prop:table}]
+Condition \eqref{eq:cond} gives $\delta\le1/100$, $\delta e^V<1$ and $e^V>73.2$, so Lemmas~\ref{lem:En} and \ref{lem:main} apply. Insert Lemma~\ref{lem:R} into $\mathcal T=\sum_\gamma|c(\gamma)|^2R(\gamma)$, and use $|c(\gamma)|^2\le\ell^2(1+\delta)\le\delta^2(1+\delta)$ and (L4). We treat the resulting terms one at a time.
+
+\step{$G$ terms} By Lemma~\ref{lem:R}, $\sum_\gamma|c(\gamma)|^2G(\gamma)$ is at most the sum in Lemma~\ref{lem:main} plus
+\[
+\delta^2(1+\delta)\frac{1/4+\sigma^2}2\sum_\gamma\gamma^{-2}\le0.06\,\delta^2(1+\delta)(\tfrac14+\sigma^2).
+\]
+
+\step{Main term and the shift of $\Lambda_1$} Since $\ell\ge\delta-\delta^2/2$, we have $\Lambda_1\le\log\frac1{\pi\delta}+\delta=\Lambda_1^0+\delta$, and $\ell\sqrt{1+\delta}/\delta\le1+\delta$. Put $X=\Lambda_1^0+a_1\le L$. Lemma~\ref{lem:main} divided by $\delta$ is then at most
+\[
+(1+\delta)\big((X+\delta)^2+a_2-a_1^2\big)\le X^2+a_2-a_1^2+\delta(L^2+3L),
+\]
+plus the error terms. In those, $\Lambda=\log(1/\ell)\le L$.
+
+\step{Prime terms} By Lemma~\ref{lem:En} (note $W(\log n)=0$ for $n>e^V$) they equal
+\[
+2\delta\sum_{n\le e^V}\frac{\Lambda(n)^2W(\log n)}n-2\sum_{n\le e^V}\frac{\Lambda(n)W(\log n)}{\sqrt n}E_n .
+\]
+For the first sum, $t\mapsto W(\log t)$ decreases from $1$ to $0$ on $[1,e^V]$. Partial summation and (L2) give
+\begin{align*}
+\sum_{n\le e^V}\frac{\Lambda(n)^2W(\log n)}n&=\int_1^{e^V}S(t)\dd\big(-W(\log t)\big)\le0.04+\int_0^V\tfrac12v^2\big(-W'(v)\big)\dd v\\
+&=0.04+\int_0^VvW(v)\dd v,
+\end{align*}
+and (K2) evaluates the last integral as $V^2/\pi^2$. For the second sum, $W\le1$ and Lemma~\ref{lem:En} bound it by $2\delta^2\big(\psi(e^V)+2.4\sum_{n\le e^V}\Lambda(n)/n\big)$. Then use \cite{Schoenfeld} for $\psi(e^V)$, and $\Lambda(n)/n\le\Lambda(n)^2/(n\log2)$ with (L2).
+
+\step{Pole terms} By Lemma~\ref{lem:R} and (L4) they are at most $\delta^2(1+\delta)\cdot2\cdot2(\sigma^2+\sigma+\frac14)e^{V/2}\cdot0.12$.
+
+\step{Prime powers} The weight $\omega$ vanishes outside $[y_0,xe^V]$, where $y_0=xe^{-V}$. A $k$-th power in $(y,(1+\delta)y]$ with $y\le xe^V$ needs $k\le(L+V+\log(1+\delta))/\log2$, so at most $(L+V+1)/\log2$ values of $k$ occur. Let $P_k(y)$ be the sum of $\log p$ over $p^k\in(y,(1+\delta)y]$. Cauchy--Schwarz gives
+\[
+P(y)^2\le\frac{L+V+1}{\log2}\sum_kP_k(y)^2.
+\]
+Consecutive $k$-th powers near $y$ differ by more than $2\sqrt y$, and $2\sqrt y>(1+\delta)\delta y$ for $y\le xe^V$ by \eqref{eq:cond}. So $P_k(y)$ is $\log p$ for at most one $p^k$, and $P_k(y)\ne0$ only for $y\in[p^k/(1+\delta),p^k)$. On that range $\int\omega\le\int x^2y^{-2}\dd y=\delta x^2/p^k$. Hence
+\[
+\int P_k^2\omega\le\delta x^2\sum_{p^k\ge y_0}\frac{\log^2p}{p^k}.
+\]
+Stieltjes integration against $\theta$, with (L3), gives
+\[
+\sum_{p\ge z}\frac{\log^2p}{p^k}\le1.01624\,k\Big[\frac{\log z}{(k-1)z^{k-1}}+\frac1{(k-1)^2z^{k-1}}\Big],\qquad z=\max(y_0^{1/k},2).
+\]
+Here the boundary term is negative and $(\log t/t^k)'<0$ for $t\ge2$. Write $\ell_y=\log y_0=L-V$. We split the exponents into three ranges.
+\begin{itemize}
+\item[--] For $k=2$ the bracket gives $(\ell_y+2)e^{-\ell_y/2}$.
+\item[--] For $3\le k<\ell_y/\log2$ each term is at most $(\frac{\ell_y}2+\frac34)e^{-2\ell_y/3}$, and there are fewer than $\ell_y/\log2$ of them.
+\item[--] For $k\ge\ell_y/\log2$, which is at least $33$, we have $2^k\ge y_0$ and $z=2$. The terms are at most $\frac{k}{k-1}(\log2+\frac1{k-1})2^{1-k}\le0.75\cdot2^{1-k}$, which sums to at most $3/y_0=3e^{-\ell_y}$.
+\end{itemize}
+
+\step{$B$ term} This is Lemma~\ref{lem:BP} with $y_0=e^{L-V}$.
+\end{proof}
+
+\subsection{Conclusion}
+It remains to show that the bounds of Proposition~\ref{prop:table} imply \eqref{eq:target} for every $L\ge L_0$. We separate a main part $\mathcal M$, which grows with $L$, from a remainder $\mathcal R$, which is small and decreasing, and then compare them at $L_0$.
+
+Put $s=\sqrt{\mathcal E}+\sqrt{\mathcal B}$ and $m_{\rm low}=\frac12-9.55V^{-2}-e^{-V}\le m_W$. Since $(\sqrt{\mathcal T/\delta}+s)^2\le T_{\rm main}+T_{\rm pr}+R_T+2\sqrt{\mathcal T/\delta}\,s+s^2$, inequality \eqref{eq:target} follows from $\mathcal M(L)>\mathcal R(L)$, where
+\begin{align*}
+\mathcal M(L)&=2L^2m_{\rm low}-T_{\rm main}-T_{\rm pr},\\
+\mathcal R(L)&=R_T+2\sqrt{\mathcal T/\delta}\;s+s^2 .
+\end{align*}
+Let $g=2\log L+\log2\pi-a_1$, so that $T_{\rm main}=(L-g)^2+a_2-a_1^2$. Since $2\cdot9.55/9+18/\pi^2<3.9461$ and $a_2-a_1^2+0.08<1.9025$,
+\[
+\mathcal M\ge2gL-g^2-3.9461L-1.9025-2L^2e^{-3\sqrt L}.
+\]
+
+\step{$\mathcal M$ increases} The derivative of the polynomial part is $2g+4-4g/L-3.9461$. For $L\ge L_0$ we have $g\ge9.6$ and $4g/L\le0.9$, since $g/L$ decreases, so the derivative is positive. Also $L^2e^{-3\sqrt L}$ decreases for $L>16/9$.
+
+\step{A decreasing majorant of $\mathcal R$} First, $\mathcal T/\delta\le T_{\rm main}+T_{\rm pr}+R_T\le L^2-\mathcal M(L)+R_T$. Below we show $\mathcal M(L)-R_T(L)\ge\mathcal M(L_0)-\widetilde{\mathcal R}(L_0)>0$, so $\mathcal T/\delta\le L^2$ and $\mathcal R\le\widetilde{\mathcal R}$, where
+\[
+\widetilde{\mathcal R}=R_T+2\sqrt{L^2\mathcal E}+2\sqrt{L^2\mathcal B}+\big(\sqrt{\mathcal E}+\sqrt{\mathcal B}\big)^2 .
+\]
+The function $\widetilde{\mathcal R}$ increases in each of $R_T$, $L^2\mathcal E$, $L^2\mathcal B$, $\mathcal E$ and $\mathcal B$. We show that each of these quantities decreases for $L\ge L_0$. In each case the logarithmic derivative is bounded by an expression that decreases in $L$, so it suffices to check it at $L_0$. We use $\delta'/\delta=2/L-1$, $V'=\frac3{2\sqrt L}$, and, for $u=L-V$, $u'\ge1-1.5/\sqrt{L_0}>0.77$ and $u\ge u(L_0)>23$.
+\begin{itemize}
+\item Each row of $R_T$ is a sum of terms $c\,L^j\delta^ie^{\beta V}\sigma^m$ with $c,m\ge0$, $i\in\{1,2\}$, $j\le3$ and $0\le\beta\le1$. Their logarithmic derivatives are at most $5/L+1.5/\sqrt L-1<-0.6$.
+\item $L^2\mathcal E$ is $L^2(L+V+1)(1+\delta)$ times a positive constant, times a sum of three functions of $u$. The logarithmic $u$-derivatives of these three functions are at most $\frac1{u+2}-\frac12$, $\frac1u+\frac{1/2}{u/2+3/4}-\frac23$ and $-1$, each $<-0.45$. The prefactor has logarithmic derivative at most $2/L+1.23/(L+V+1)<0.07$. The total is therefore below $0.07-0.77\cdot0.45<0$.
+\item $L^2\mathcal B=0.8L^2\delta e^{-5u}$ has logarithmic derivative at most $4/L-1-5\cdot0.77<0$.
+\item $\mathcal E=(L^2\mathcal E)/L^2$ and $\mathcal B=(L^2\mathcal B)/L^2$ then decrease as well.
+\end{itemize}
+
+\step{Endpoint} In interval arithmetic, $\mathcal M(L_0)=560.36\ldots$ and $\widetilde{\mathcal R}(L_0)=14.65\ldots$, with $\mathcal E(L_0)=0.0292$, $R_T(L_0)<10^{-6}$ and $\mathcal B(L_0)<10^{-65}$. Hence, for all $L\ge L_0$,
+\[
+\mathcal M(L)\ge\mathcal M(L_0)>\widetilde{\mathcal R}(L_0)\ge\widetilde{\mathcal R}(L)\ge\mathcal R(L),
+\]
+which contradicts \eqref{eq:star}. This proves Theorem~\ref{thm:main}. \qed
+
+\begin{remark}
+The ratio of the two sides of \eqref{eq:target} is $0.685$ at $L_0$, $0.972$ at $L=10^3$, $0.99994$ at $L=10^6$ and $0.9999993$ at $L=10^8$. It tends to $1$ like $1-4\log L/L$.
+\end{remark}
+
+%======================================================================
+\section{On the constant $2$}\label{sec:optimality}
+
+We now explain why $2$ is the limit of the method, by comparing it with Goldston's deduction. Goldston~\cite[Theorem, eq.~(6)]{Goldston} proves
+\[
+\Big|\sum_{|n|\le K}(K-|n|)R_G(N+n)-K^2N\Big|\le J(N,K)+O(KN)+o(K^2N),
+\]
+where $J(N,K)=\int_1^N(\theta(u+K)-\theta(u)-K)^2\dd u$ and $R_G(n)=\sum_{p+p'=n}\log p\log p'$ (Goldston's $R(n)$). He also proves the identity~\cite[eq.~(25)]{Goldston}
+\[
+J(N,K)=KN\log N+2\sum_{n<K}(K-n)Z(N;n)-K^2N+o(K^2N),\qquad Z(N;n)=\sum_{p'-p=n}\log p\log p'.
+\]
+Suppose RH gives $J(N,K)\le(\kappa+o(1))KN\log^2N$. Then $(N-K,N+K)$ contains a Goldbach number once $K>\kappa\log^2N$, that is, for intervals of length $2\kappa\log^2N$.
+
+The RH input behind Lemma~\ref{lem:schur} corresponds to $\kappa=1$: in both deductions the ratio of the lower to the upper bound is $K/\log^2N$. Fejér's inequality $T(0)\le K\int_0^1T$ for nonnegative trigonometric polynomials of degree $K-1$ shows that no other weight in Goldston's inequality does better under the same input. Consequently, an RH-only bound with $\kappa<1$ is necessary to go below $2$. Equivalently, one needs an averaged prime-pair bound
+\[
+\sum_{n<K}(K-n)\big(Z(N;n)-\mathfrak S(n)N\big)\le\tfrac\kappa2KN\log^2N\qquad(K\asymp\log^2N),
+\]
+or pointwise control of Montgomery's pair-correlation function $F(\alpha)$~\cite{Montgomery} on the short range $1<\alpha\le1+(2\log\log N)/\log N$. We know of no such result.
+
+Goldston's Corollary~3~\cite{Goldston} needs an averaged upper-bound sieve constant $A<2$ for prime pairs. Because of the parity phenomenon~\cite{Bombieri,FI}, we do not expect sieve methods alone to give this. Numerically, $J(10^8,339)=0.81\,KN\log(N/K)=0.030\,KN\log^2N$, so the loss lies entirely in the RH-only bound.
+
+%======================================================================
+\section*{Note on the preparation of this paper}
+The research, the proofs and the text were produced largely with the AI model Claude (Anthropic), working under the author's direction. The checks so far are as follows.
+\begin{itemize}
+\item Every numerical constant in the proof is verified in ball arithmetic (Appendix~\ref{app:comp}).
+\item Most of the deduction of Theorem~\ref{thm:main} is formalized in Lean~4 with Mathlib. The formalization covers:
+\begin{itemize}
+\item[--] Lemma~\ref{lem:kernel}(i), (ii), (iv), (v), and Lemma~\ref{lem:cover} with Corollary~\ref{cor:m};
+\item[--] Lemmas~\ref{lem:schur} and~\ref{lem:BP};
+\item[--] the $\mathcal E$ row of Proposition~\ref{prop:table}, from (L3);
+\item[--] the identity $V_\theta=A+B-P$ with the triangle inequality in \eqref{eq:star};
+\item[--] the range argument for all $x\ge3.9\cdot10^{18}$, by a route independent of \S\ref{sec:proof}.
+\end{itemize}
+It takes as hypotheses RH, the explicit formula for $\psi$, the verification~\cite{OHP}, and two statements not yet formalized. The first is (L3) of Lemma~\ref{lem:arith}, whose proof is a computation too large for the proof assistant's kernel. The second is the $\mathcal T$ row of Proposition~\ref{prop:table}. Its proof uses Lemma~\ref{lem:kernel}(iii) and Lemmas~\ref{lem:R}--\ref{lem:arith}, besides the parts of Lemma~\ref{lem:kernel} already formalized.
+\item Each cited result used in the proof has been checked against the original publication.
+\end{itemize}
+The analytic part (\S\S\ref{sec:schur}--\ref{sec:arith}) has been checked by hand derivation and numerically against zeta zeros, but not yet by an independent expert. Comments and corrections are welcome. The paper, scripts and Lean formalization are available in the accompanying repository.
+
+%======================================================================
+\appendix
+\section{Computations}\label{app:comp}
+All computations are reproducible with the scripts accompanying this paper. The proof uses only the first script. It uses ball arithmetic (Arb~\cite{Arb}, through python-flint), so every inequality it reports is rigorous, and it runs in a few seconds.
+\begin{itemize}
+\item \texttt{scripts/rigorous\_checks.py} verifies:
+\begin{itemize}
+\item[--] the numerical constants in Corollary~\ref{cor:m} and Lemmas~\ref{lem:En} and \ref{lem:main};
+\item[--] $a_1$ and $a_2$;
+\item[--] Lemma~\ref{lem:arith}: an exact sieve to $10^7$, with all sums in ball arithmetic, plus the closed-form RH tail. The output gives $\sup_{t\le10^7}(S(t)-\frac12\log^2t)=0.0390683\ldots$, $S(10^7)-\frac12\log^210^7=-1.5724\ldots$, $\psi(10^7)-10^7=-1460.59\ldots$ and the RH tail constant $-1.370\ldots$;
+\item[--] condition \eqref{eq:cond}, $\mathcal M(L_0)$, $\widetilde{\mathcal R}(L_0)$, $\mathcal T/\delta\le L_0^2$, and the logarithmic-derivative constants of \S\ref{sec:proof}.
+\end{itemize}
+\item Not used in the proof:
+\begin{itemize}
+\item[--] \texttt{scripts/range\_proof.py} recomputes Table~\ref{tab:rem} in floating point and confirms the monotonicity on $8\cdot10^4$ points in $[L_0,10^8]$;
+\item[--] \texttt{scripts/check\_explicit\_formula.py} checks \eqref{eq:weil} against the first $20\,000$ zeros, to about $10^{-5}$, and checks (L4) numerically.
+\end{itemize}
+\end{itemize}
+
+%======================================================================
+\begin{thebibliography}{99}
+\bibitem{Arb} F.~Johansson, Arb: efficient arbitrary-precision midpoint-radius interval arithmetic, \emph{IEEE Trans. Comput.} \textbf{66} (2017), no.~8, 1281--1292. \url{https://doi.org/10.1109/TC.2017.2690633}
+\bibitem{Bombieri} E.~Bombieri, The asymptotic sieve, \emph{Mem. Accad. Naz. dei XL} \textbf{1/2} (1976), 243--269.
+\bibitem{Chandee} V.~Chandee, Explicit upper bounds for $L$-functions on the critical line, \emph{Proc. Amer. Math. Soc.} \textbf{137} (2009), 4049--4063.
+\bibitem{CH} A.~Chirre, M.~V.~Hagen, On Goldbach numbers in short intervals, \emph{Res. Number Theory} \textbf{12} (2026), no.~3, art.~82; arXiv:2512.23534.
+\bibitem{CHD} M.~Cully-Hugill, A.~Dudek, An explicit mean-value estimate for the prime number theorem in intervals, \emph{J. Aust. Math. Soc.} \textbf{117} (2024), 1--15. \url{https://doi.org/10.1017/S1446788723000113}
+\bibitem{FI} J.~Friedlander, H.~Iwaniec, \emph{Opera de Cribro}, Amer. Math. Soc. Colloq. Publ. 57, 2010.
+\bibitem{Goldston} D.~A.~Goldston, Linnik's theorem on Goldbach numbers in short intervals, \emph{Glasgow Math. J.} \textbf{32} (1990), 285--297.
+\bibitem{Katai} I.~Kátai, A remark on a paper of Ju.~V.~Linnik, \emph{Magyar Tud. Akad. Mat. Fiz. Oszt. Közl.} \textbf{17} (1967), 99--100.
+\bibitem{Linnik} Yu.~V.~Linnik, Some conditional theorems concerning the binary Goldbach problem, \emph{Izv. Akad. Nauk SSSR Ser. Mat.} \textbf{16} (1952), no.~6, 503--520.
+\bibitem{Montgomery} H.~L.~Montgomery, The pair correlation of zeros of the zeta function, in: \emph{Analytic Number Theory}, Proc. Sympos. Pure Math. 24, Amer. Math. Soc., 1973, 181--193.
+\bibitem{MV} H.~L.~Montgomery, R.~C.~Vaughan, The exceptional set of Goldbach's problem, \emph{Acta Arith.} \textbf{27} (1975), 353--370. \url{https://doi.org/10.4064/aa-27-1-353-370}
+\bibitem{OHP} T.~Oliveira e Silva, S.~Herzog, S.~Pardi, Empirical verification of the even Goldbach conjecture and computation of prime gaps up to $4\cdot10^{18}$, \emph{Math. Comp.} \textbf{83} (2014), 2033--2060.
+\bibitem{Platt} D.~J.~Platt, Isolating some non-trivial zeros of zeta, \emph{Math. Comp.} \textbf{86} (2017), 2449--2467. The certified list of zeros is available through the LMFDB, \url{https://www.lmfdb.org/zeros/zeta/}; the first is $14.1347\ldots$.
+\bibitem{RS} Z.~Rudnick, P.~Sarnak, Zeros of principal $L$-functions and random matrix theory, \emph{Duke Math. J.} \textbf{81} (1996), 269--322.
+\bibitem{Schoenfeld} L.~Schoenfeld, Sharper bounds for the Chebyshev functions $\theta(x)$ and $\psi(x)$.~II, \emph{Math. Comp.} \textbf{30} (1976), 337--360.
+\bibitem{Trudgian} T.~S.~Trudgian, An improved upper bound for the argument of the Riemann zeta-function on the critical line~II, \emph{J. Number Theory} \textbf{134} (2014), 280--292. \url{https://doi.org/10.1016/j.jnt.2013.07.017}
+\end{thebibliography}
+\end{document}

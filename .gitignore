@@ -1,0 +1,22 @@
+# Private working material (not published)
+private/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Lean / Lake build output
+lean/.lake/
+
+# LaTeX build by-products
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.bbl
+paper/*.blg
+paper/*.toc
+paper/*.synctex.gz
+
+# Working notes and source audit (kept local)
+notes/
