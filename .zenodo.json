@@ -1,0 +1,25 @@
+{
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "title": "Goldbach numbers in intervals of length 2 log² x under the Riemann hypothesis",
+  "creators": [
+    {
+      "name": "Vynohradov, Anton"
+    }
+  ],
+  "description": "<p>Assuming the Riemann hypothesis, we prove that for every x ≥ 4 the interval (x, x + 2 log² x] contains an even integer that is a sum of two primes. The previous best constant was 123, due to Chirre and Hagen. The improvement comes from three changes to the classical Selberg-integral argument. We pair intervals of relative length. We use a positive-definite weight on the logarithmic scale whose width grows like √(log x). And we evaluate the resulting zero sums exactly by the Weil explicit formula, which also makes the prime-power contribution negligible. The constant 2 is the limit of the method, and we compare it heuristically with Goldston's deduction, which reaches the same constant from mean-square bounds of the same size.</p><p>This archive contains the paper (LaTeX and PDF), the interval-arithmetic checks of every numerical constant in the proof, floating-point cross-checks, and a conditional Lean 4 / Mathlib formalization of most of the deduction.</p><p><strong>Status:</strong> unreviewed preprint, prepared largely with the AI model Claude (Anthropic) under the author's direction. The result is conditional on the Riemann hypothesis.</p>",
+  "license": "cc-by-4.0",
+  "keywords": [
+    "Goldbach numbers",
+    "short intervals",
+    "Riemann hypothesis",
+    "explicit formula",
+    "Selberg integral",
+    "Lean 4",
+    "formalization",
+    "MSC2020: 11P32",
+    "MSC2020: 11M26"
+  ],
+  "language": "eng",
+  "notes": "The paper is licensed under CC BY 4.0. The code (scripts/ and lean/) is licensed under MIT; see the LICENSE file. Unreviewed preprint, prepared with AI assistance (Claude, Anthropic)."
+}
