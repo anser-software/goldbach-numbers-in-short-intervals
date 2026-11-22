@@ -4,26 +4,26 @@
 (x, x + 2 log² x] contains an even number that is a sum of two primes. The previous best
 constant was 123 (Chirre–Hagen, Res. Number Theory 2026).
 
-> **Status: unreviewed preprint.** The work was done largely with an AI model (Claude, Anthropic)
-> RH is assumed throughout;
-> an announced formal proof of GRH has not been independently confirmed.
+> **Status: unreviewed preprint.** The work was done largely with an AI model (Claude, Anthropic).
+> RH is assumed throughout; an announced formal proof of GRH has not been independently confirmed.
 
 ## Author
-Anton Vynohradov. Licence: MIT for code, CC BY 4.0 for the paper and notes (see `LICENSE`).
+Anton Vynohradov. Licence: MIT for code, CC BY 4.0 for the paper (see `LICENSE`).
 
 ## Contents
 - `paper/`: the paper (LaTeX and PDF).
 - `scripts/rigorous_checks.py`: every numerical constant in the proof, checked in Arb ball
   arithmetic. Setup: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`,
   then run `.venv/bin/python scripts/rigorous_checks.py`.
-  The other two scripts are floating-point cross-checks only.
+  The other scripts are floating-point cross-checks and are not used in the proof
+  (`selberg_numeric.py` computes the value of J(10⁸, 339) quoted in §9).
 - `lean/`: a **conditional** Lean 4 / Mathlib formalization (build with `cd lean && lake build`).
 
 ## What the Lean formalization proves
 The main result is `GoldbachRH.goldbach_short_intervals_main` in `lean/GoldbachRH/Main.lean`:
 
     RiemannHypothesis → ExplicitFormulaPsi → GoldbachVerifiedUpTo (4·10^18) →
-      ThetaBound → Prop13T →
+      Prop13T →
       ∀ x ≥ 4, ∃ n, IsGoldbachNumber n ∧ x < n ∧ n ≤ x + 2 log² x
 
 It uses only Lean's standard axioms (`propext`, `Classical.choice`, `Quot.sound`) and contains
@@ -37,8 +37,9 @@ no `sorry`. `RiemannHypothesis` and `riemannZeta` are Mathlib's definitions.
 - Lemma 7 (the Schur bound ‖A‖²_ω ≤ x²𝒯), from the explicit formula, Fatou's lemma, a change
   of variables and Lemma 4 (ii);
 - Lemma 8 (the term B);
-- the ℰ row of Proposition 13 (prime powers), from (L3), via Abel summation (Mathlib),
-  Cauchy–Schwarz over exponents, and Bernoulli's inequality for the spacing of k-th powers;
+- the ℰ row of Proposition 13 (prime powers), via Abel summation (Mathlib), Cauchy–Schwarz
+  over exponents, and Bernoulli's inequality for the spacing of k-th powers. Its arithmetic input,
+  Lemma 12 (L3), is Chebyshev's θ(t) ≤ t log 4, which Mathlib proves;
 - the identity V_θ = A + B − P and the triangle-inequality step in (6);
 - the complete range argument for all log x ≥ 42.8. This follows a cruder but derivative-free
   route that is independent of the paper's;
@@ -50,14 +51,11 @@ no `sorry`. `RiemannHypothesis` and `riemannZeta` are Mathlib's definitions.
   The statement has been checked numerically against the first 20 000 zeros;
 - `GoldbachVerifiedUpTo (4·10^18)`: the computation of Oliveira e Silva, Herzog and Pardi.
 
-**The paper's own lemmas, not yet formalized** (stated in `lean/GoldbachRH/Assembly.lean`):
+**The paper's own lemma not yet formalized** (stated in `lean/GoldbachRH/Assembly.lean`):
 - `Prop13T`: the 𝒯 row of Proposition 13. Its proof uses Lemma 4 (ii), (iii), (v) (of which (ii) and (v)
   are now proved in Lean) and Lemmas 9–12,
-  which in turn cite the Weil explicit formula, Chandee, Trudgian, Platt and Schoenfeld;
-- `ThetaBound`: Lemma 12 (L3), θ(t) < 1.01624t. Its proof is a sieve computation to 10⁷ (checked
-  in interval arithmetic by `scripts/rigorous_checks.py`) plus Schoenfeld's bound; the
-  computation is too large for Lean's kernel.
+  which in turn cite the Weil explicit formula, Chandee, Trudgian, Platt and Schoenfeld.
 
-These lemmas are the paper's main analytic content. They are verified by hand and
+This row is the paper's main remaining analytic content. It is verified by hand and
 numerically, but not formally. Sums over zeros are taken in `[0, ∞]`, so a divergent sum is
 `∞` and cannot silently become `0`.

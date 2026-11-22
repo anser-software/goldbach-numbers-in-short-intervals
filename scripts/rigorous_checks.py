@@ -5,11 +5,11 @@ proved, not just evaluated in floating point.  Run with the project venv:
 
     .venv/bin/python rigorous_checks.py            (about 10 s)
 
-Sections (paper numbering, draft v0.3):
+Sections (paper numbering):
   [K]  Kernel constants: Corollary 5 (9.55), Lemma 10 (1.4 in E_n), a1, a2.
   [L2] Lemma 12 (L2): S(t) = sum_{n<=t} Lambda(n)^2/n <= (1/2) log^2 t + 0.04 for all t >= 1.
-  [L3] Lemma 12 (L3): theta(t) < 1.01624 t for all t > 0.
-       Both: exact sieve to U0 = 10^7 summed in Arb, plus Schoenfeld's RH bound above U0.
+       Exact sieve to U0 = 10^7 summed in Arb, plus Schoenfeld's RH bound above U0.
+       (Lemma 12 (L3), Chebyshev's theta(t) <= t log 4, is elementary and needs no computation.)
   [L4] Lemma 12 (L4): sum_gamma gamma^{-2} <= 0.12, from Trudgian's N(T) bound and N(14) = 0.
   [M]  Lemma 11 (main zero sum): the constants 0.081 and the error polynomial.
   [R]  Section 8: condition (cond), M(L0), Rt(L0), T/delta <= L^2, and the constants in the
@@ -78,13 +78,34 @@ coef = [2 * (1 + d) / 3, 2 * (1 + d) * arb("2.5") + 2 * arb("7.01"),
 stated = [arb(8) / 3, arb(33), arb(136), arb(250)]
 check("Lemma 11 error coefficients " + ", ".join(show(c, 5) for c in coef) + " <= 8/3, 33, 136, 250",
       all(c <= s for c, s in zip(coef, stated)))
-# tail integral identities: int_0^inf (z+a)(z+b) e^{-z} = ab + a + b + 2; with e^{-2z}: ab/2 + (a+b)/4 + 1/4
-check("tail: 2.01(L^2+7L+11) + 10(L^2/2+3L+3.5) <= 8(L^2+7L+10) coefficientwise-in-excess",
-      arb("2.01") + 5 <= 8 and arb("2.01") * 7 + 30 <= 56 and arb("2.01") * 11 + 35 <= 80)
+# Lemma 11, Step 5: int_0^inf (z+L+4)(z+L+1)(2.01 e^{-z} + 10 e^{-2z}) dz = 7.01 L^2 + 44.07 L + 57.11.
+# Expand (z+a)(z+b) = z^2 + (a+b) z + ab with a = L+4, b = L+1, as a polynomial in L, and integrate
+# term by term with int_0^inf z^k e^{-cz} dz = k!/c^(k+1).  Polynomials are coefficient lists [L^0, L^1, L^2].
+def pmul(p, q):
+    r = [arb(0)] * (len(p) + len(q) - 1)
+    for i, x in enumerate(p):
+        for j, y in enumerate(q):
+            r[i + j] += x * y
+    return r
+def padd(p, q):
+    n = max(len(p), len(q))
+    return [(p[i] if i < len(p) else 0) + (q[i] if i < len(q) else 0) for i in range(n)]
+def pscale(c, p):
+    return [c * x for x in p]
+pa, pb = [arb(4), arb(1)], [arb(1), arb(1)]                 # a = L + 4, b = L + 1
+zcoef = [pmul(pa, pb), padd(pa, pb), [arb(1)]]               # coefficients of z^0, z^1, z^2
+def moment(k, c):
+    return arb(math.factorial(k)) / arb(c) ** (k + 1)
+tail_poly = [arb(0)]
+for k, pk in enumerate(zcoef):
+    tail_poly = padd(tail_poly, pscale(arb("2.01") * moment(k, 1) + 10 * moment(k, 2), pk))
+print("  Lemma 11 tail polynomial: " + " + ".join(f"{show(c, 6)} L^{i}" for i, c in enumerate(tail_poly)))
+check("Lemma 11 tail: int_0^inf (z+L+4)(z+L+1)(2.01e^-z + 10e^-2z) dz = 7.01 L^2 + 44.07 L + 57.11",
+      all(abs(c - arb(s)) < arb("1e-40") for c, s in zip(tail_poly, ["57.11", "44.07", "7.01"])))
 
 # ----------------------------------------------------------------------------------------------
 U0 = 10 ** 7
-print(f"[L2/L3] exact sieve to U0 = {U0:.0e} in Arb, plus Schoenfeld above U0")
+print(f"[L2] exact sieve to U0 = {U0:.0e} in Arb, plus Schoenfeld above U0")
 
 
 def primes_upto(n):
@@ -107,9 +128,7 @@ events.sort()
 logp = {}
 S = arb(0)
 psi = arb(0)
-theta = arb(0)
 worst_L2 = None                   # max over jump points of S(n) - (1/2) log^2 n (upper end of ball)
-worst_L3 = None                   # max theta(p)/p over primes
 for n, p in events:
     lp = logp.get(p)
     if lp is None:
@@ -119,17 +138,9 @@ for n, p in events:
     ex = S - arb(n).log() ** 2 / 2
     if worst_L2 is None or ex.upper() > worst_L2[0].upper():
         worst_L2 = (ex, n)
-    if n == p:
-        theta += lp
-        r = theta / p
-        if worst_L3 is None or r.upper() > worst_L3[0].upper():
-            worst_L3 = (r, p)
-print(f"  sup_(t<=U0) [S(t) - log^2 t/2] = {show(worst_L2[0], 8)} at t = {worst_L2[1]};"
-      f"  max theta(p)/p = {show(worst_L3[0], 8)} at p = {worst_L3[1]}")
+print(f"  sup_(t<=U0) [S(t) - log^2 t/2] = {show(worst_L2[0], 8)} at t = {worst_L2[1]}")
 check("(L2) for 1 <= t <= U0: sup < 0.04  (S - log^2/2 decreases between jumps; S = 0 on [1,2))",
       worst_L2[0] < arb("0.04"))
-check("(L3) for 0 < t <= U0: theta(t)/t < 1.01624  (attained at primes; theta = 0 on (0,2))",
-      worst_L3[0] < arb("1.01624"))
 lU = arb(U0).log()
 E0 = psi - U0
 base = S - lU ** 2 / 2 - E0 * lU / U0
@@ -148,9 +159,6 @@ c_ii = base + s1 + tail
 print(f"  S(U0) - log^2 U0/2 = {show(S - lU**2/2, 8)};  psi(U0) - U0 = {show(E0, 8)}")
 print(f"  RH tail constant: {show(base, 8)} + {show(s1, 8)} + {show(tail, 8)} = {show(c_ii, 8)}")
 check("(L2) for t > U0: S(t) <= log^2 t/2 + c with c < 0.04", c_ii < arb("0.04"))
-th_tail = 1 + lU ** 2 / (8 * PI * arb(U0).sqrt())
-check(f"(L3) for t > U0: theta(t)/t <= 1 + log^2 t/(8 pi sqrt t) <= {show(th_tail, 6)} < 1.01624 "
-      "(decreasing for log t > 4)", th_tail < arb("1.01624"))
 check("Schoenfeld threshold: U0 >= 73.2 and e^V >= 73.2 at L0", U0 >= 73.2)
 
 # ----------------------------------------------------------------------------------------------
@@ -167,7 +175,7 @@ check("(L4) sum_gamma gamma^{-2} <= 0.12", s_gam <= arb("0.12"))
 print("[R] the range argument at L0 = log(3.9e18)")
 C_L2 = arb("0.04")
 SG = arb("0.12")
-TH = arb("1.01624")
+TH = arb(4).log()                 # (L3): theta(t) <= t log 4
 
 
 def pieces(L):

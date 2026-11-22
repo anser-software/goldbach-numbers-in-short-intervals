@@ -8,15 +8,14 @@
   PASS  |N0(14)| = 0.431996 <= 0.44 and log(14/2pi) = 0.801180 <= 0.81
   PASS  Trudgian constants (worst published) imply |Q(t)| <= log t + 4 for t >= e
   PASS  Lemma 11 error coefficients 0.67333, 19.070, 96.220, 114.94 <= 8/3, 33, 136, 250
-  PASS  tail: 2.01(L^2+7L+11) + 10(L^2/2+3L+3.5) <= 8(L^2+7L+10) coefficientwise-in-excess
-[L2/L3] exact sieve to U0 = 1e+07 in Arb, plus Schoenfeld above U0
-  sup_(t<=U0) [S(t) - log^2 t/2] = 0.039068347 at t = 3;  max theta(p)/p = 0.99981298 at p = 7105253
+  Lemma 11 tail polynomial: 57.1100 L^0 + 44.0700 L^1 + 7.01000 L^2
+  PASS  Lemma 11 tail: int_0^inf (z+L+4)(z+L+1)(2.01e^-z + 10e^-2z) dz = 7.01 L^2 + 44.07 L + 57.11
+[L2] exact sieve to U0 = 1e+07 in Arb, plus Schoenfeld above U0
+  sup_(t<=U0) [S(t) - log^2 t/2] = 0.039068347 at t = 3
   PASS  (L2) for 1 <= t <= U0: sup < 0.04  (S - log^2/2 decreases between jumps; S = 0 on [1,2))
-  PASS  (L3) for 0 < t <= U0: theta(t)/t < 1.01624  (attained at primes; theta = 0 on (0,2))
   S(U0) - log^2 U0/2 = -1.5724306;  psi(U0) - U0 = -1460.5967
   RH tail constant: -1.5700764 + 0.052686740 + 0.14718012 = -1.3702095
   PASS  (L2) for t > U0: S(t) <= log^2 t/2 + c with c < 0.04
-  PASS  (L3) for t > U0: theta(t)/t <= 1 + log^2 t/(8 pi sqrt t) <= 1.00327 < 1.01624 (decreasing for log t > 4)
   PASS  Schoenfeld threshold: U0 >= 73.2 and e^V >= 73.2 at L0
 [L4] sum over zeros of 1/gamma^2, from Trudgian's N(T) bound and N(14) = 0 (Platt)
   sum 1/gamma^2 <= 0.1182080378
@@ -26,7 +25,7 @@
   PASS  (cond) L0 - V - 4 log L0 - log 2 = 7.45927 > 0
   PASS  e^V >= 73.2 (Schoenfeld applies to psi(e^V))
   PASS  M closed form: M = 2gL - g^2 - 3.9461 L - 1.9025 - 2L^2 e^-V (exact coefficient 3.946003...)
-  M(L0) = 560.36164,  Rt(L0) = 14.647293,  E(L0) = 0.0291531, R_T(L0) = 6.358e-7, B(L0) = 3.49e-66
+  M(L0) = 560.36164,  Rt(L0) = 17.113235,  E(L0) = 0.0397689, R_T(L0) = 6.358e-7, B(L0) = 3.49e-66
   PASS  M(L0) > Rt(L0)
   PASS  T/delta <= T_main + T_pr + R_T = 1181.27 <= L0^2 = 1832.48
   PASS  M' >= 2g + 4 - 4g/L - 3.9461 > 0 at L0 (g >= 9.6, g/L decreasing)
@@ -34,5 +33,5 @@
   PASS  L^2 E: log-derivative <= -0.2887 < 0 at L0 (u >= u(L0), all bounds decreasing)
   PASS  L^2 B: log-derivative <= 4/L - 1 - 5u' < 0
   PASS  cond increasing: 1 - 1.5/sqrt(L) - 4/L > 0 at L0
-  ratio of the two sides of (*) at L0: 0.685011
+  ratio of the two sides of (*) at L0: 0.686149
 ALL CHECKS PASSED

@@ -18,10 +18,10 @@ Hypotheses (not proved in Lean):
 * `GoldbachVerifiedUpTo N`: every even `n` with `4 < n ≤ N` is a Goldbach number.
   This is the computation of Oliveira e Silva, Herzog and Pardi with `N = 4·10¹⁸`.
 * `WeightedMeanSquareBound`: the weighted mean-square bound (the right-hand inequalities of (6)
-  in §8, together with Proposition 13). In the paper it follows from RH through Lemma 4 (ii), (iii)
-  and (v), Lemmas 7–12 and Proposition 13, which
-  use the explicit formulas, Chandee's lemma, Schoenfeld's and Trudgian's bounds, and Platt's
-  computation. That analytic part is **not** formalized here; see the README.
+  in §8, together with Proposition 13). It is used as a hypothesis only by the intermediate
+  theorem `goldbach_short_intervals`. Most of its proof is now formalized: Lemmas 7 and 8 and the
+  `ℰ` row of Proposition 13 are proved (`Lemma7`, `Lemma8`, `PrimePowers`), and the main
+  theorem `goldbach_short_intervals_main` needs only the `𝒯` row (`Prop13T`); see the README.
 -/
 
 open Real
@@ -82,7 +82,7 @@ noncomputable def Tb (L : ℝ) : ℝ := Tmain L + Tpr L + RT L
 
 /-- Table 1 bound for `ℰ` (prime powers). -/
 noncomputable def Eb (L : ℝ) : ℝ :=
-  (L + Vp L + 1) / log 2 * (1 + dl L) * 1.01624 *
+  (L + Vp L + 1) / log 2 * (1 + dl L) * log 4 *
     ((uL L + 2) * exp (-uL L / 2)
       + uL L / log 2 * (uL L / 2 + 0.75) * exp (-(2 * uL L) / 3)
       + 3 * exp (-uL L))

@@ -241,7 +241,7 @@ lemma Tb_nonneg : 0 ≤ Tb L := by
   positivity
 
 /-- `L² ℰ ≤ 110`. -/
-lemma L2_Eb_le : L ^ 2 * Eb L ≤ 110 := by
+lemma L2_Eb_le : L ^ 2 * Eb L ≤ 140 := by
   have hL0 := L_pos hL
   have hu := uL_ge hL
   have hLu := L_le_two_u hL
@@ -273,23 +273,28 @@ lemma L2_Eb_le : L ^ 2 * Eb L ≤ 110 := by
       nlinarith
     linarith
   -- the prefactor
-  have hpref : L ^ 2 * ((L + Vp L + 1) / log 2 * (1 + dl L) * 1.01624) ≤ 22.9 * u ^ 3 := by
+  have hpref : L ^ 2 * ((L + Vp L + 1) / log 2 * (1 + dl L) * log 4) ≤ 31.2 * u ^ 3 := by
     have h1 : (L + Vp L + 1) / log 2 ≤ 1.45 * (1.5 * L) := by
       rw [div_le_iff₀ hl2pos]; nlinarith
-    have h2 : (L + Vp L + 1) / log 2 * (1 + dl L) * 1.01624 ≤ 2.86 * L := by
+    have h2 : (L + Vp L + 1) / log 2 * (1 + dl L) * log 4 ≤ 3.89 * L := by
       have h0 : 0 ≤ (L + Vp L + 1) / log 2 := by
         apply div_nonneg _ hl2pos.le; linarith [Vp_ge hL]
       have : (L + Vp L + 1) / log 2 * (1 + dl L) ≤ 1.45 * (1.5 * L) * 1.29 :=
         mul_le_mul h1 (by linarith) (by linarith) (by positivity)
-      nlinarith
+      have hl4 : log 4 ≤ 1.3863 := by
+        rw [show (4 : ℝ) = 2 ^ 2 by norm_num, log_pow]; push_cast; linarith [log_two_lt_d9]
+      have hl40 : 0 ≤ log 4 := log_nonneg (by norm_num)
+      calc (L + Vp L + 1) / log 2 * (1 + dl L) * log 4 ≤ 1.45 * (1.5 * L) * 1.29 * 1.3863 :=
+            mul_le_mul this hl4 hl40 (by positivity)
+        _ ≤ 3.89 * L := by nlinarith
     have hL3 : L ^ 3 ≤ 8 * u ^ 3 := by
       calc L ^ 3 ≤ (2 * u) ^ 3 := pow_le_pow_left₀ hL0.le hLu 3
         _ = 8 * u ^ 3 := by ring
-    calc L ^ 2 * ((L + Vp L + 1) / log 2 * (1 + dl L) * 1.01624) ≤ L ^ 2 * (2.86 * L) :=
+    calc L ^ 2 * ((L + Vp L + 1) / log 2 * (1 + dl L) * log 4) ≤ L ^ 2 * (3.89 * L) :=
           mul_le_mul_of_nonneg_left h2 (by positivity)
-      _ = 2.86 * L ^ 3 := by ring
-      _ ≤ 22.9 * u ^ 3 := by nlinarith
-  have hEb : Eb L = ((L + Vp L + 1) / log 2 * (1 + dl L) * 1.01624) * X := by
+      _ = 3.89 * L ^ 3 := by ring
+      _ ≤ 31.2 * u ^ 3 := by nlinarith
+  have hEb : Eb L = ((L + Vp L + 1) / log 2 * (1 + dl L) * log 4) * X := by
     unfold Eb; rw [← hudef]
   have hm4 := pow_mul_exp_neg_le (k := 4) (c := 1 / 2) (u0 := 23.15) (u := u)
     (by norm_num) (by norm_num) hu
@@ -297,18 +302,18 @@ lemma L2_Eb_le : L ^ 2 * Eb L ≤ 110 := by
     (by norm_num) (by norm_num) hu
   have n4 := num_u4
   have n5 := num_u5
-  have hpref0 : 0 ≤ (L + Vp L + 1) / log 2 * (1 + dl L) * 1.01624 := by
+  have hpref0 : 0 ≤ (L + Vp L + 1) / log 2 * (1 + dl L) * log 4 := by
     have : 0 ≤ L + Vp L + 1 := by linarith [Vp_ge hL]
     positivity
-  calc L ^ 2 * Eb L = (L ^ 2 * ((L + Vp L + 1) / log 2 * (1 + dl L) * 1.01624)) * X := by
+  calc L ^ 2 * Eb L = (L ^ 2 * ((L + Vp L + 1) / log 2 * (1 + dl L) * log 4)) * X := by
         rw [hEb]; ring
-    _ ≤ (22.9 * u ^ 3) * X := mul_le_mul_of_nonneg_right hpref hX0
-    _ ≤ (22.9 * u ^ 3) * (1.22 * u * e1 + 0.773 * u ^ 2 * e2) :=
+    _ ≤ (31.2 * u ^ 3) * X := mul_le_mul_of_nonneg_right hpref hX0
+    _ ≤ (31.2 * u ^ 3) * (1.22 * u * e1 + 0.773 * u ^ 2 * e2) :=
         mul_le_mul_of_nonneg_left hXle (by positivity)
-    _ = 27.938 * (u ^ 4 * e1) + 17.7017 * (u ^ 5 * e2) := by ring
-    _ ≤ 27.938 * 2.76 + 17.7017 * 1.34 := by
+    _ = 38.064 * (u ^ 4 * e1) + 24.1176 * (u ^ 5 * e2) := by ring
+    _ ≤ 38.064 * 2.76 + 24.1176 * 1.34 := by
         rw [he1, he2]; gcongr <;> linarith
-    _ ≤ 110 := by norm_num
+    _ ≤ 140 := by norm_num
 
 lemma Eb_nonneg : 0 ≤ Eb L := by
   have hu := uL_ge hL
@@ -383,7 +388,7 @@ theorem range_inequality :
   -- `L √ℰ ≤ 10.49` and `L √ℬ ≤ 2.24`
   have hEs0 := sqrt_nonneg (Eb L)
   have hBs0 := sqrt_nonneg (Bb L)
-  have hEL : L * √(Eb L) ≤ 10.49 := by
+  have hEL : L * √(Eb L) ≤ 11.84 := by
     have h2 : (L * √(Eb L)) ^ 2 = L ^ 2 * Eb L := by rw [mul_pow, sq_sqrt hE0]
     nlinarith [mul_nonneg hL0.le hEs0]
   have hBL : L * √(Bb L) ≤ 2.24 := by
@@ -391,9 +396,9 @@ theorem range_inequality :
     nlinarith [mul_nonneg hL0.le hBs0]
   set b := √(Eb L) + √(Bb L) with hbdef
   have hb0 : 0 ≤ b := by positivity
-  have hLb : L * b ≤ 12.73 := by rw [hbdef]; nlinarith
-  have hb : b ≤ 0.2975 := by nlinarith [mul_le_mul_of_nonneg_right hL hb0]
-  have hS : (√(Tb L) + √(Eb L) + √(Bb L)) ^ 2 ≤ L ^ 2 - 5.4 * L + 2.91 + 25.46 + 0.09 := by
+  have hLb : L * b ≤ 14.08 := by rw [hbdef]; nlinarith
+  have hb : b ≤ 0.33 := by nlinarith [mul_le_mul_of_nonneg_right hL hb0]
+  have hS : (√(Tb L) + √(Eb L) + √(Bb L)) ^ 2 ≤ L ^ 2 - 5.4 * L + 2.91 + 28.16 + 0.11 := by
     have e : (√(Tb L) + √(Eb L) + √(Bb L)) ^ 2 = Tb L + 2 * √(Tb L) * b + b ^ 2 := by
       rw [hbdef]; nlinarith [sq_sqrt hT0]
     rw [e]

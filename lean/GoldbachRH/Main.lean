@@ -9,13 +9,13 @@ Assume RH. For every real `x ≥ 4`, the interval `(x, x + 2 log² x]` contains 
 
 Two forms are proved.
 
-* `goldbach_short_intervals_main` (the main result): as below, with Lemma 7 proved and the `ℰ`
-  row of Proposition 13 derived from Lemma 12 (L3) (`ThetaBound`).
+* `goldbach_short_intervals_main` (the main result): as below, with Lemma 7 and the `ℰ` row of
+  Proposition 13 proved. The only remaining lemma of the paper is the `𝒯` row (`Prop13T`).
 * `goldbach_short_intervals_of_lemmas`. Hypotheses:
   - cited results: RH, the explicit formula for ψ (`ExplicitFormulaPsi`) and the verification
     of Oliveira e Silva, Herzog and Pardi (`GoldbachVerifiedUpTo (4·10¹⁸)`);
-  - the paper's own lemmas not yet formalized: `Lemma7`, `Prop13T` and `PrimePowerBound`
-    (see `GoldbachRH.Assembly`).
+  - three of the paper's results, stated as propositions: `Lemma7`, `Prop13T` and
+    `PrimePowerBound` (see `GoldbachRH.Assembly`). `Lemma7` and `PrimePowerBound` are proved.
   Lemma 8 and the step from these lemmas to (6) are proved.
 * `goldbach_short_intervals`: the same conclusion from the single hypothesis
   `RiemannHypothesis → WeightedMeanSquareBound`.
@@ -110,7 +110,7 @@ theorem goldbach_short_intervals (hRH : RiemannHypothesis)
 
 /-- **Main theorem, with the analytic part split into its pieces.** Assume RH, the explicit
 formula for ψ, the verification up to `4·10¹⁸`, and the paper's Lemma 7 and the two rows of
-Proposition 13 that are not yet formalized. Then every interval `(x, x + 2 log² x]` with
+Proposition 13. Then every interval `(x, x + 2 log² x]` with
 `x ≥ 4` contains a Goldbach number. -/
 theorem goldbach_short_intervals_of_lemmas (hRH : RiemannHypothesis)
     (hEF : ExplicitFormulaPsi) (hOHP : GoldbachVerifiedUpTo (4 * 10 ^ 18))
@@ -118,13 +118,14 @@ theorem goldbach_short_intervals_of_lemmas (hRH : RiemannHypothesis)
     ∀ x : ℝ, 4 ≤ x → ∃ n : ℕ, IsGoldbachNumber n ∧ x < n ∧ (n : ℝ) ≤ x + 2 * log x ^ 2 :=
   goldbach_short_intervals hRH (fun h => wms_of_lemmas h7 h13 hPP h hEF) hOHP
 
-/-- **Main theorem, current form.** As `goldbach_short_intervals_of_lemmas`, with Lemma 7 now
-proved (`GoldbachRH.lemma7`). Remaining hypotheses: RH, the explicit formula for ψ, the
-verification up to `4·10¹⁸`, Lemma 12 (L3) and the `𝒯` row of Proposition 13. -/
+/-- **Main theorem, current form.** As `goldbach_short_intervals_of_lemmas`, with Lemma 7
+(`GoldbachRH.lemma7`) and the `ℰ` row of Proposition 13 (`GoldbachRH.primePowerBound`) proved.
+Remaining hypotheses: RH, the explicit formula for ψ, the verification up to `4·10¹⁸`, and the
+`𝒯` row of Proposition 13. -/
 theorem goldbach_short_intervals_main (hRH : RiemannHypothesis)
     (hEF : ExplicitFormulaPsi) (hOHP : GoldbachVerifiedUpTo (4 * 10 ^ 18))
-    (hL3 : ThetaBound) (h13 : Prop13T) :
+    (h13 : Prop13T) :
     ∀ x : ℝ, 4 ≤ x → ∃ n : ℕ, IsGoldbachNumber n ∧ x < n ∧ (n : ℝ) ≤ x + 2 * log x ^ 2 :=
-  goldbach_short_intervals_of_lemmas hRH hEF hOHP lemma7 h13 (primePowerBound_of_L3 hL3)
+  goldbach_short_intervals_of_lemmas hRH hEF hOHP lemma7 h13 primePowerBound
 
 end GoldbachRH

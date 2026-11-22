@@ -34,7 +34,7 @@ A1 = 1 - 0.5772156649015329 - math.log(2)     # a1 = -0.27036...
 A2 = 1.895563101630140345                      # a2 (exact, rigorous_constant.py)
 C_L2 = 0.04                                    # Lemma L2 (lambda2_constant.py: 0.03907)
 SUM_INV_GAMMA2 = 0.12                          # sum over all zeros of 1/gamma^2 (Lemma L4; true value 0.0462)
-THETA_RS = 1.01624                             # theta(t) < 1.01624 t (Rosser-Schoenfeld 1962)
+THETA_RS = math.log(4)                         # (L3): theta(t) <= t log 4 (Chebyshev)
 L0 = math.log(3.9e18)
 
 
@@ -55,13 +55,13 @@ def pieces(L):
         "E_n":         2.02 * (d_psi + d * 2.4 * (V ** 2 / 2 + 0.04) / math.log(2)),
         "poles":       0.5 * (1 + d) * (sig ** 2 + sig + 0.25) * math.exp(logdelta + V / 2),
     }
-    # (I8): sum_{k>=2} sum_{p^k >= y0} log^2 p / p^k, y0 = x e^{-V}, via theta(t) <= 1.01624 t
+    # (I8): sum_{k>=2} sum_{p^k >= y0} log^2 p / p^k, y0 = x e^{-V}, via theta(t) <= t log 4
     ly0 = L - V
-    # closed form: k = 2 term; 3 <= k < k1 (count <= ly0/log 2, each <= 1.01624 (ly0/2 + 0.75) e^{-2 ly0/3});
-    # k >= k1 (z = 2): <= 3.1 * 2^{-(k1-2)} <= 12.4 e^{-ly0}, since 2^{k1} > y0.
+    # closed form: k = 2 term; 3 <= k < k1 (count <= ly0/log 2, each <= log 4 (ly0/2 + 0.75) e^{-2 ly0/3});
+    # k >= k1 (z = 2): each term <= log 4 * 0.75 * 2^{1-k}, summing to <= log 4 * 3 e^{-ly0} (Table 1).
     s = THETA_RS * ((ly0 + 2) * math.exp(-ly0 / 2)
                     + (ly0 / math.log(2)) * (ly0 / 2 + 0.75) * math.exp(-2 * ly0 / 3)
-                    + 12.4 / THETA_RS * math.exp(-ly0))
+                    + 3 * math.exp(-ly0))
     E = ((L + V + 1) / math.log(2)) * (1 + d) * s
     B = 0.8 * d * math.exp(-5 * (L - V))
     m_low = 0.5 - 9.55 / V ** 2 - math.exp(-V)
@@ -85,7 +85,7 @@ if __name__ == "__main__":
           ", ".join(f"{k} {v:.2e}" for k, v in p0['RT'].items()) +
           f";  E = {p0['E']:.3e}, B = {p0['B']:.1e}]")
     print(f"  T(L0) = {p0['T']:.2f} <= L0^2 = {L0**2:.2f};  m_low = {p0['m_low']:.5f};  "
-          f"ratio (*) = {p0['ratio']:.5f};  one-power condition {p0['one_power']:.2f} > 0")
+          f"ratio of bounds in (*) = {p0['ratio']:.5f};  one-power condition {p0['one_power']:.2f} > 0")
     assert p0['M'] > p0['Rt'] and p0['T'] <= L0 ** 2 and p0['one_power'] > 0
 
     # monotonicity checks on a fine grid, L0 .. 1e8
@@ -111,8 +111,8 @@ if __name__ == "__main__":
     ok &= TleL2
     print(f"  T <= L^2 on grid: {TleL2};   one-power condition on grid: {all(p['one_power'] > 0 for p in P)}")
     worst = max(p['ratio'] for p in P)
-    print(f"  direct check of (*) on the grid: max ratio = {worst:.7f}")
-    print("Samples (L, M, Rt, ratio):")
+    print(f"  direct check of (*) on the grid: max ratio of bounds = {worst:.7f}")
+    print("Samples (L, M, Rt, ratio of the Table 1 bounds to 2 L^2 m_low; an upper bound for the true ratio):")
     for L in [L0, 50, 100, 1000, 1e4, 1e6, 1e8]:
         p = pieces(L)
         print(f"  {L:10.4g}  {p['M']:.6e}  {p['Rt']:.3e}  {p['ratio']:.7f}")

@@ -3,7 +3,8 @@ import GoldbachRH.Assembly
 /-!
 # The prime-power row `ℰ` of Proposition 13
 
-`‖P‖²_ω ≤ δ x² ℰ`, with `ℰ` the Table 1 bound, from Lemma 12 (L3): `θ(t) < 1.01624 t`.
+`‖P‖²_ω ≤ δ x² ℰ`, with `ℰ` the Table 1 bound. The only arithmetic input is Lemma 12 (L3),
+Chebyshev's bound `θ(t) ≤ t log 4`, which Mathlib proves (`Chebyshev.theta_le_log4_mul_x`).
 
 Proof (the paper's, with one simplification noted below).
 1. `P(y) = Σ_{k=2}^N P_k(y)` with `P_k(y) = Σ_{p : y < p^k ≤ (1+δ)y} log p` (Mathlib's
@@ -20,13 +21,6 @@ open Real MeasureTheory Set Filter
 open scoped ENNReal
 
 namespace GoldbachRH
-
-/-- **Lemma 12 (L3)** (pending): `θ(t) < 1.01624 t` for all `t > 0`. The paper proves it from
-an exact sieve up to `10⁷` (checked in interval arithmetic by `scripts/rigorous_checks.py`) and
-Schoenfeld's bound under RH. This sieve computation cannot be run inside Lean's kernel, so the
-lemma stays a hypothesis. The same bound is classically attributed to Rosser–Schoenfeld (1962);
-that attribution has not been checked against the source and is not relied on. -/
-def ThetaBound : Prop := ∀ t : ℝ, 0 < t → Chebyshev.theta t < 1.01624 * t
 
 /-! ### Step 4: Abel summation against `θ` -/
 
@@ -668,8 +662,9 @@ lemma small_param {x : ℝ} (hx0 : 0 < x) (hL : (42.8 : ℝ) ≤ log x) :
     rw [le_div_iff₀ (by norm_num)]; nlinarith [exp_pos (-(1 * (23.15 : ℝ)))]
   nlinarith [mul_le_mul_of_nonneg_right hL4 hexp]
 
-/-- **The `ℰ` row of Proposition 13** from Lemma 12 (L3). -/
-theorem primePowerBound_of_L3 (hL3 : ThetaBound) : PrimePowerBound := by
+/-- **The `ℰ` row of Proposition 13.** Unconditional apart from the statement's RH premise,
+which is not used. -/
+theorem primePowerBound : PrimePowerBound := by
   intro _hRH x hx
   have hx0 : 0 < x := by linarith
   have hL := log_ge_of_ge hx
@@ -683,7 +678,8 @@ theorem primePowerBound_of_L3 (hL3 : ThetaBound) : PrimePowerBound := by
   have hδ1 : δ ≤ 0.29 := dl_le hL
   have hu : (23.15 : ℝ) ≤ u := uL_ge hL
   have hy0 : x * exp (-V) = exp u := x_exp_neg_Vp hx0
-  have hθ : ∀ t : ℝ, 0 < t → Chebyshev.theta t ≤ 1.01624 * t := fun t ht => (hL3 t ht).le
+  have hθ : ∀ t : ℝ, 0 < t → Chebyshev.theta t ≤ log 4 * t := fun t ht =>
+    Chebyshev.theta_le_log4_mul_x ht.le
   have hl2 : 0 < log 2 := log_pos (by norm_num)
   set Y1 := x * exp V with hY1
   set M : ℕ := ⌊2 * Y1⌋₊ + 1 with hM
@@ -765,11 +761,11 @@ theorem primePowerBound_of_L3 (hL3 : ThetaBound) : PrimePowerBound := by
   -- the real sum
   set Sk : ℕ → ℝ := fun k => ∑ p ∈ Pset M,
     (if exp u < (p : ℝ) ^ k then log p ^ 2 / (p : ℝ) ^ k else 0) with hSk
-  have hSk_le : ∀ k ∈ Finset.Icc 2 N, Sk k ≤ 1.01624 * Bk u (k - 2) := by
+  have hSk_le : ∀ k ∈ Finset.Icc 2 N, Sk k ≤ log 4 * Bk u (k - 2) := by
     intro k hk
     obtain ⟨j, rfl⟩ : ∃ j, k = j + 2 := ⟨k - 2, by have := (Finset.mem_Icc.1 hk).1; omega⟩
     simp only [hSk, Nat.add_sub_cancel]
-    have := sum_k_bound (by norm_num) hθ j u M
+    have := sum_k_bound (log_nonneg (by norm_num)) hθ j u M
     simpa [Pset, Bk, Gk] using this
   have hsumB : ∑ k ∈ Finset.Icc 2 N, Bk u (k - 2) ≤ (u + 2) * exp (-u / 2)
       + u / log 2 * (u / 2 + 3 / 4) * exp (-(2 * u) / 3) + 3 * exp (-u) := by
@@ -789,11 +785,11 @@ theorem primePowerBound_of_L3 (hL3 : ThetaBound) : PrimePowerBound := by
       refine Finset.sum_congr rfl fun p _ => ?_
       split_ifs <;> ring
     rw [e]
-    have hS1 : ∑ k ∈ Finset.Icc 2 N, Sk k ≤ 1.01624 * ((u + 2) * exp (-u / 2)
+    have hS1 : ∑ k ∈ Finset.Icc 2 N, Sk k ≤ log 4 * ((u + 2) * exp (-u / 2)
         + u / log 2 * (u / 2 + 3 / 4) * exp (-(2 * u) / 3) + 3 * exp (-u)) := by
-      calc ∑ k ∈ Finset.Icc 2 N, Sk k ≤ ∑ k ∈ Finset.Icc 2 N, 1.01624 * Bk u (k - 2) :=
+      calc ∑ k ∈ Finset.Icc 2 N, Sk k ≤ ∑ k ∈ Finset.Icc 2 N, log 4 * Bk u (k - 2) :=
             Finset.sum_le_sum hSk_le
-        _ = 1.01624 * ∑ k ∈ Finset.Icc 2 N, Bk u (k - 2) := by rw [Finset.mul_sum]
+        _ = log 4 * ∑ k ∈ Finset.Icc 2 N, Bk u (k - 2) := by rw [Finset.mul_sum]
         _ ≤ _ := by gcongr
     have hNle : (N : ℝ) ≤ (L + V + 1) / log 2 := Nat.floor_le (by have := Vp_ge hL; positivity)
     have hSnn : 0 ≤ ∑ k ∈ Finset.Icc 2 N, Sk k :=
@@ -801,7 +797,7 @@ theorem primePowerBound_of_L3 (hL3 : ThetaBound) : PrimePowerBound := by
         split_ifs
         · have : (0 : ℝ) ≤ p := Nat.cast_nonneg p; positivity
         · exact le_refl 0
-    have hEb : δ * x ^ 2 * Eb L = (L + V + 1) / log 2 * δ * (1 + δ) * x ^ 2 * (1.01624 *
+    have hEb : δ * x ^ 2 * Eb L = (L + V + 1) / log 2 * δ * (1 + δ) * x ^ 2 * (log 4 *
         ((u + 2) * exp (-u / 2) + u / log 2 * (u / 2 + 3 / 4) * exp (-(2 * u) / 3)
           + 3 * exp (-u))) := by
       rw [Eb, ← hδdef, ← hVdef, ← hudef]; norm_num; ring

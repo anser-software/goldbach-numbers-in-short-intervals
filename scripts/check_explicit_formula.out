@@ -1,0 +1,21 @@
+zeros: 20000, largest ordinate 18046.46
+
+1. Explicit formula for psi: truncated zero sum vs y - psi(y) - log 2pi - log(1 - y^-2)/2
+  y =    10.5  target +0.834665   T =   5447.9: diff -2.09e-04;  T =   9877.8: diff -1.53e-03;  T =  18046.5: diff +8.93e-04
+  y =   100.5  target +4.616861   T =   5447.9: diff +2.42e-02;  T =   9877.8: diff -5.37e-03;  T =  18046.5: diff +3.35e-03
+  y =  1000.5  target +1.981211   T =   5447.9: diff +1.01e-01;  T =   9877.8: diff -4.20e-02;  T =  18046.5: diff +4.71e-02
+
+2. Lemma 9, R(gamma): zeros vs Weil formula (V = 3)
+  gamma =   237.770  zeros: 4.201581767  Weil: 4.201581757  diff +1.1e-08  (G = 3.63342, poles = -1.20e-09, primes = +0.56817)
+  gamma =  1420.417  zeros: 5.898693499  Weil: 5.898693486  diff +1.3e-08  (G = 5.42083, poles = +1.25e-12, primes = +0.47787)
+  gamma =  1000.000  zeros: 4.981228796  Weil: 4.981228784  diff +1.2e-08  (G = 5.06988, poles = -3.79e-12, primes = -0.08865)
+  gamma =  2500.000  zeros: 5.785277582  Weil: 5.785277568  diff +1.4e-08  (G = 5.98617, poles = -1.74e-14, primes = -0.20089)
+  largest difference: 1.4e-08
+
+3. Lemma 12 (L4): sum over zeros of gamma^{-2}
+  2 sum_(n<=20000) gamma_n^-2 + tail estimate = 0.046210   (bound used in the paper: 0.12)
+
+4. T/delta from the zeros vs the main and prime terms of the bound (V = 3)
+  delta = 0.050  T/delta (zeros) =   5.3730   main + prime terms =   5.7821   ratio = 0.9292
+  delta = 0.020  T/delta (zeros) =   9.3221   main + prime terms =   9.4902   ratio = 0.9823
+  delta = 0.010  T/delta (zeros) =  13.3267   main + prime terms =  13.4144   ratio = 0.9935

@@ -4,18 +4,19 @@ import GoldbachRH.Range
 /-!
 # From the lemmas of §§4–7 to the weighted mean-square bound
 
-This file states the remaining unformalized lemmas of the paper as propositions and proves
-that, together with Lemma 8, they imply `WeightedMeanSquareBound`, the right-hand part of (6).
+This file states three of the paper's results as propositions and proves that, together with
+Lemma 8, they imply `WeightedMeanSquareBound`, the right-hand part of (6).
 
-Pending (stated here, not yet proved in Lean):
 * `Lemma7`: `‖A‖²_ω ≤ x² 𝒯` (the Schur bound). Its statement includes the hypotheses it needs
-  (RH and the explicit formula for ψ). **Now proved:** `GoldbachRH.lemma7`.
-* `Prop13T`: the `𝒯` row of Proposition 13, `𝒯 ≤ δ (T_main + T_pr + R_T)`. In the paper it
-  rests on Lemmas 4 (ii), (iii), (v) and 9–12; 4 (ii) and (v) are proved in `KernelFourier`.
-* `PrimePowerBound`: the `ℰ` row of Proposition 13, `‖P‖²_ω ≤ δ x² ℰ`.
+  (RH and the explicit formula for ψ). Proved in `GoldbachRH.Lemma7` (`GoldbachRH.lemma7`).
+* `PrimePowerBound`: the `ℰ` row of Proposition 13, `‖P‖²_ω ≤ δ x² ℰ`. Proved in
+  `GoldbachRH.PrimePowers` (`GoldbachRH.primePowerBound`).
+* `Prop13T`: the `𝒯` row of Proposition 13, `𝒯 ≤ δ (T_main + T_pr + R_T)`. **Not yet
+  formalized.** In the paper it rests on Lemmas 4 (ii), (iii), (v) and 9–12; 4 (ii) and (v) are
+  proved in `KernelFourier`.
 
-Proved: Lemma 8 (`GoldbachRH.lemma8`), the identity `V_θ = A + B - P` and the triangle
-inequality step (`wms_of_lemmas`).
+Also proved here: the identity `V_θ = A + B - P` and the triangle inequality step
+(`wms_of_lemmas`).
 -/
 
 open Real MeasureTheory Set
@@ -23,20 +24,20 @@ open scoped ENNReal
 
 namespace GoldbachRH
 
-/-- **Lemma 7** (pending). Under RH and the explicit formula, `‖A‖²_ω ≤ x² 𝒯`. -/
+/-- **Lemma 7** (proved in `GoldbachRH.Lemma7`). Under RH and the explicit formula, `‖A‖²_ω ≤ x² 𝒯`. -/
 def Lemma7 : Prop :=
   RiemannHypothesis → ExplicitFormulaPsi →
     ∀ x V δ : ℝ, 0 < x → 0 < V → 0 ≤ δ → 1 < x * exp (-V) →
       ∫⁻ y in Ioi (0 : ℝ), ENNReal.ofReal (Afun δ y ^ 2 * weight x V y)
         ≤ ENNReal.ofReal (x ^ 2) * Tsum δ V
 
-/-- **Proposition 13, row `𝒯`** (pending). With `L = log x`, `δ = 2L²/x`, `V = 3√L`:
+/-- **Proposition 13, row `𝒯`** (not yet formalized). With `L = log x`, `δ = 2L²/x`, `V = 3√L`:
 `𝒯 ≤ δ (T_main + T_pr + R_T)`. -/
 def Prop13T : Prop :=
   RiemannHypothesis → ∀ x : ℝ, 3.9e18 ≤ x →
     Tsum (dl (log x)) (Vp (log x)) ≤ ENNReal.ofReal (dl (log x) * Tb (log x))
 
-/-- **Proposition 13, row `ℰ`** (pending). `‖P‖²_ω ≤ δ x² ℰ` with `ℰ` the Table 1 bound. -/
+/-- **Proposition 13, row `ℰ`** (proved in `GoldbachRH.PrimePowers`). `‖P‖²_ω ≤ δ x² ℰ` with `ℰ` the Table 1 bound. -/
 def PrimePowerBound : Prop :=
   RiemannHypothesis → ∀ x : ℝ, 3.9e18 ≤ x →
     ∫⁻ y in Ioi (0 : ℝ), ENNReal.ofReal (Pfun (dl (log x)) y ^ 2 * weight x (Vp (log x)) y)
