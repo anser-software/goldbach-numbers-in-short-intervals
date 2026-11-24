@@ -20,18 +20,28 @@
 [L4] sum over zeros of 1/gamma^2, from Trudgian's N(T) bound and N(14) = 0 (Platt)
   sum 1/gamma^2 <= 0.1182080378
   PASS  (L4) sum_gamma gamma^{-2} <= 0.12
+[C] Lemma 6, the weighted first-moment cover, at L0 = log(3.9e18)
+  PASS  x e^-V >= 599 (Schoenfeld's theta bound applies): L0 - V = 23.1793 > log 599
+  PASS  cover loss / L at L0 = 2.1222288 < 2.123 (terms decrease for L >= L0)
+  PASS  2 * 9.55 = 19.1 exactly (V^2 = 9L)
+[S] small x: the cutoff r and the optimal coefficient on x >= 4
+  PASS  f(r) = r + log^2 r crosses 6 in [4.0462095747893014, 4.0462095747893015]
+  PASS  f increasing on t >= 1 (f' = 1 + 2 log t / t > 0)
+  PASS  C_* = 2/log^2 4 = 1.040684491 > 1
+  PASS  log^2 6 > 2, so for 6 <= x < 3.9e18 the next even integer is in (x, x + log^2 x]
 [R] the range argument at L0 = log(3.9e18)
-  L0 = 42.80750823, V = 19.628234, delta = 9.39735e-16, u = L0 - V = 23.1793
+  L0 = 42.80750823, V = 19.628234, delta = 4.69867e-16, u = L0 - V = 23.1793
   PASS  (cond) L0 - V - 4 log L0 - log 2 = 7.45927 > 0
   PASS  e^V >= 73.2 (Schoenfeld applies to psi(e^V))
-  PASS  M closed form: M = 2gL - g^2 - 3.9461 L - 1.9025 - 2L^2 e^-V (exact coefficient 3.946003...)
-  M(L0) = 560.36164,  Rt(L0) = 17.113235,  E(L0) = 0.0397689, R_T(L0) = 6.358e-7, B(L0) = 3.49e-66
+  PASS  M closed form: M >= 2dL - d^2 - 3.9461 L - 1.9025 - 2L^2 e^-V - 2L^4 e^-L - L^4 e^(-L/2)/(2 pi)
+  M(L0) = 513.87557,  Rt(L0) = 17.113235,  E(L0) = 0.0397689, R_T(L0) = 3.179e-7, B(L0) = 1.75e-66
   PASS  M(L0) > Rt(L0)
-  PASS  T/delta <= T_main + T_pr + R_T = 1181.27 <= L0^2 = 1832.48
-  PASS  M' >= 2g + 4 - 4g/L - 3.9461 > 0 at L0 (g >= 9.6, g/L decreasing)
+  PASS  T/delta <= T_main + T_pr + R_T = 1227.76 <= L0^2 = 1832.48
+  PASS  d(L0) = 8.92852 >= 8.9; M' >= 2d + 4 - 4d/L - 3.9461 > 0 at L0 (d/L decreasing)
+  PASS  L^4 e^-L and L^4 e^(-L/2) decrease for L > 8 (L0 > 8)
   PASS  R_T terms: log-derivative <= 5/L + 1.5/sqrt(L) - 1 < 0 at L0
   PASS  L^2 E: log-derivative <= -0.2887 < 0 at L0 (u >= u(L0), all bounds decreasing)
   PASS  L^2 B: log-derivative <= 4/L - 1 - 5u' < 0
   PASS  cond increasing: 1 - 1.5/sqrt(L) - 4/L > 0 at L0
-  ratio of the two sides of (*) at L0: 0.686149
+  ratio of the two sides of (*) at L0: 0.712994
 ALL CHECKS PASSED

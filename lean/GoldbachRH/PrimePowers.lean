@@ -635,19 +635,19 @@ lemma measurable_window (x V δ c n : ℝ) :
   exact ENNReal.measurable_ofReal.comp
     ((Measurable.ite hs measurable_const measurable_const).mul (measurable_weight x V))
 
-/-- `δ²·2xe^V ≤ 4` for `L ≥ 42.8`. -/
+/-- `δ²·2xe^V ≤ 4` for `L ≥ 42.8` (in fact `≤ 1`). -/
 lemma small_param {x : ℝ} (hx0 : 0 < x) (hL : (42.8 : ℝ) ≤ log x) :
     dl (log x) ^ 2 * (2 * (x * exp (Vp (log x)))) ≤ 4 := by
   set L := log x with hLdef
   have hxL : x = exp L := (exp_log hx0).symm
   have hu := uL_ge hL
   have hLu := L_le_two_u hL
-  have e : dl L ^ 2 * (2 * (x * exp (Vp L))) = 8 * L ^ 4 * exp (-(1 * uL L)) := by
+  have e : dl L ^ 2 * (2 * (x * exp (Vp L))) = 2 * L ^ 4 * exp (-(1 * uL L)) := by
     rw [hxL, dl, uL]
     have : exp (-L) ^ 2 * exp L * exp (Vp L) = exp (-(1 * (L - Vp L))) := by
       rw [sq, ← exp_add, ← exp_add, ← exp_add]; congr 1; ring
-    calc (2 * L ^ 2 * exp (-L)) ^ 2 * (2 * (exp L * exp (Vp L)))
-        = 8 * L ^ 4 * (exp (-L) ^ 2 * exp L * exp (Vp L)) := by ring
+    calc (L ^ 2 * exp (-L)) ^ 2 * (2 * (exp L * exp (Vp L)))
+        = 2 * L ^ 4 * (exp (-L) ^ 2 * exp L * exp (Vp L)) := by ring
       _ = _ := by rw [this]
   rw [e]
   have h1 := pow_mul_exp_neg_le (k := 4) (c := 1) (u0 := 23.15) (u := uL L) (by norm_num)

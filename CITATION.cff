@@ -1,16 +1,18 @@
 cff-version: 1.2.0
 message: "If you use this work, please cite it as below."
-title: "Goldbach numbers in intervals of length 2 log² x under the Riemann hypothesis"
+title: "Goldbach numbers in intervals of length log² x"
 authors:
   - family-names: Vynohradov
     given-names: Anton
     orcid: "https://orcid.org/0009-0002-6771-3681"
-version: "0.5"
+version: "0.6"
 doi: 10.5281/zenodo.24441477
-date-released: 2026-11-23
+date-released: 2026-11-24
 license: MIT
 type: software
 abstract: >-
-  Conditional on the Riemann hypothesis, every interval (x, x + 2 log² x] with x ≥ 4 contains
-  a Goldbach number (previous constants: 123 published, 4.45 announced). Paper, interval-arithmetic checks, and a
-  conditional Lean 4 formalization. Unreviewed preprint, prepared with AI assistance.
+  Conditional on the Riemann hypothesis, every interval (x, x + log² x] with x ≥ r = 4.0462…
+  (r + log² r = 6) contains a Goldbach number; the starting point is sharp, and 2/log² 4 = 1.0406…
+  is the optimal constant on x ≥ 4 (previous constants: 123 published, 4.45 announced, 2 in v0.5).
+  Paper, interval-arithmetic checks, and a conditional Lean 4 formalization. Unreviewed preprint,
+  prepared with AI assistance.

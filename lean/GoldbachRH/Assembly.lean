@@ -31,7 +31,7 @@ def Lemma7 : Prop :=
       ∫⁻ y in Ioi (0 : ℝ), ENNReal.ofReal (Afun δ y ^ 2 * weight x V y)
         ≤ ENNReal.ofReal (x ^ 2) * Tsum δ V
 
-/-- **Proposition 13, row `𝒯`** (not yet formalized). With `L = log x`, `δ = 2L²/x`, `V = 3√L`:
+/-- **Proposition 13, row `𝒯`** (not yet formalized). With `L = log x`, `δ = L²/x`, `V = 3√L`:
 `𝒯 ≤ δ (T_main + T_pr + R_T)`. -/
 def Prop13T : Prop :=
   RiemannHypothesis → ∀ x : ℝ, 3.9e18 ≤ x →
@@ -164,7 +164,7 @@ lemma measurable_Afun (δ : ℝ) : Measurable (Afun δ) := by
 
 /-! ### Assembly -/
 
-lemma dl_log {x : ℝ} (hx : 0 < x) : dl (log x) = 2 * log x ^ 2 / x := by
+lemma dl_log {x : ℝ} (hx : 0 < x) : dl (log x) = log x ^ 2 / x := by
   unfold dl; rw [exp_neg, exp_log hx]; ring
 
 lemma x_exp_neg_Vp {x : ℝ} (hx : 0 < x) : x * exp (-Vp (log x)) = exp (uL (log x)) := by

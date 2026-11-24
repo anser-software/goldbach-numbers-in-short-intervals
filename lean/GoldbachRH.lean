@@ -2,6 +2,10 @@ import GoldbachRH.Defs
 import GoldbachRH.Kernel
 import GoldbachRH.KernelFourier
 import GoldbachRH.Cover
+import GoldbachRH.CoverFM
+import GoldbachRH.CoverFM2
+import GoldbachRH.CoverFM3
+import GoldbachRH.CoverFM4
 import GoldbachRH.ExpBounds
 import GoldbachRH.Range
 import GoldbachRH.Zeros

@@ -1,10 +1,15 @@
 import GoldbachRH.Kernel
 
 /-!
-# The weighted cover (Lemma 6 of the paper, combined with Corollary 5)
+# The pointwise cover of version 0.5, and shared ingredients
 
 If `(x, (1+δ)x]` contains no Goldbach number, then
-`∫_{y > 0} V_θ(y)² ω(y) dy ≥ δ² x³ (1/2 - 9.55/V² - e^{-V})`.
+`∫_{y > 0} V_θ(y)² ω(y) dy ≥ δ² x³ (1/2 - 9.55/V² - e^{-V})` (`cover_lower_bound`).
+
+This was Lemma 6 of version 0.5 and gave the coefficient `2`. Version 0.6 replaces it by the
+first-moment cover `cover_lower_bound_fm` (`GoldbachRH.CoverFM4`), which roughly doubles the bound.
+The main theorems no longer use `cover_lower_bound`; the other lemmas of this file
+(`no_prime_of_no_goldbach`, `Fint`, `integral_log_sq`, `const_955`, …) are shared.
 -/
 
 open Real Set MeasureTheory

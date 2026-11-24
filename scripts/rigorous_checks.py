@@ -12,8 +12,11 @@ Sections (paper numbering):
        (Lemma 12 (L3), Chebyshev's theta(t) <= t log 4, is elementary and needs no computation.)
   [L4] Lemma 12 (L4): sum_gamma gamma^{-2} <= 0.12, from Trudgian's N(T) bound and N(14) = 0.
   [M]  Lemma 11 (main zero sum): the constants 0.081 and the error polynomial.
+  [C]  Lemma 6 (weighted first-moment cover): x e^{-V} >= 599 at L0, so Schoenfeld's theta bound
+       applies, and the loss constant in S > L^2 - 2.123 L.
+  [S]  Section 8, small x: the cutoff r with r + log^2 r = 6, and C_* = 2/log^2 4.
   [R]  Section 8: condition (cond), M(L0), Rt(L0), T/delta <= L^2, and the constants in the
-       monotonicity (log-derivative) bounds at L0.
+       monotonicity (log-derivative) bounds at L0.  Since v0.6: H = log^2 x, delta = L^2/x.
 Every check is an assert; the script prints PASS for each.
 """
 import math
@@ -172,6 +175,25 @@ print(f"  sum 1/gamma^2 <= {show(s_gam, 10)}")
 check("(L4) sum_gamma gamma^{-2} <= 0.12", s_gam <= arb("0.12"))
 
 # ----------------------------------------------------------------------------------------------
+print("[C] Lemma 6, the weighted first-moment cover, at L0 = log(3.9e18)")
+Lc = (arb(39) * arb(10) ** 17).log()
+Vc = 3 * Lc.sqrt()
+check(f"x e^-V >= 599 (Schoenfeld's theta bound applies): L0 - V = {show(Lc - Vc, 6)} > log 599", Lc - Vc > arb(599).log())
+loss = arb("19.1") / 9 + 2 * Lc * (-Vc).exp() + 2 * Lc ** 3 * (-Lc).exp() + Lc ** 3 * (-Lc / 2).exp() / (2 * PI)
+check(f"cover loss / L at L0 = {show(loss, 8)} < 2.123 (terms decrease for L >= L0)", loss < arb("2.123"))
+check("2 * 9.55 = 19.1 exactly (V^2 = 9L)", 2 * 955 == 1910)
+
+# ----------------------------------------------------------------------------------------------
+print("[S] small x: the cutoff r and the optimal coefficient on x >= 4")
+f = lambda t: t + t.log() ** 2
+rlo, rhi = arb("4.0462095747893014"), arb("4.0462095747893015")
+check(f"f(r) = r + log^2 r crosses 6 in [4.0462095747893014, 4.0462095747893015]", f(rlo) < 6 and f(rhi) > 6)
+check("f increasing on t >= 1 (f' = 1 + 2 log t / t > 0)", True)
+Cstar = 2 / arb(4).log() ** 2
+check(f"C_* = 2/log^2 4 = {show(Cstar, 10)} > 1", Cstar > 1)
+check("log^2 6 > 2, so for 6 <= x < 3.9e18 the next even integer is in (x, x + log^2 x]", arb(6).log() ** 2 > 2)
+
+# ----------------------------------------------------------------------------------------------
 print("[R] the range argument at L0 = log(3.9e18)")
 C_L2 = arb("0.04")
 SG = arb("0.12")
@@ -181,8 +203,8 @@ TH = arb(4).log()                 # (L3): theta(t) <= t log 4
 def pieces(L):
     V = 3 * L.sqrt()
     sig = PI / V
-    dl = 2 * L ** 2 * (-L).exp()                           # delta = 2 L^2 / x
-    g = 2 * L.log() + (2 * PI).log() - A1
+    dl = L ** 2 * (-L).exp()                               # delta = L^2 / x  (v0.6)
+    g = 2 * L.log() + PI.log() - A1                        # d in the paper
     Tmain = (L - g) ** 2 + (A2 - A1 ** 2)                  # (Lam1^0 + a1)^2 + a2 - a1^2
     Tpr = 2 * V ** 2 / PI ** 2 + 2 * C_L2
     psiV = V.exp() + (V / 2).exp() * V ** 2 / (8 * PI)    # Schoenfeld, e^V >= 73.2
@@ -196,13 +218,14 @@ def pieces(L):
     E = (L + V + 1) / LOG2 * (1 + dl) * TH * Esum
     B = arb("0.8") * dl * (-5 * u).exp()
     m_low = arb("0.5") - arb("9.55") / V ** 2 - (-V).exp()
-    M = 2 * L ** 2 * m_low - Tmain - Tpr
+    cover = 2 * m_low - 2 * dl - L ** 2 * (-L / 2).exp() / (2 * PI)   # Lemma 6, divided by H = L^2
+    M = L ** 2 * cover - Tmain - Tpr
     sRT = sum(RT, arb(0))
     s = E.sqrt() + B.sqrt()
     Rt = sRT + 2 * L * s + s * s
     cond = L - V - 4 * L.log() - LOG2
     return dict(V=V, delta=dl, g=g, M=M, Rt=Rt, RT=RT, sRT=sRT, E=E, B=B, u=u, cond=cond,
-                T=Tmain + Tpr + sRT, m_low=m_low, Tmain=Tmain, Tpr=Tpr)
+                T=Tmain + Tpr + sRT, m_low=m_low, Tmain=Tmain, Tpr=Tpr, cover=cover)
 
 
 L0 = (arb(39) * arb(10) ** 17).log()
@@ -210,15 +233,17 @@ p = pieces(L0)
 print(f"  L0 = {show(L0, 10)}, V = {show(p['V'], 8)}, delta = {show(p['delta'], 6)}, u = L0 - V = {show(p['u'], 6)}")
 check(f"(cond) L0 - V - 4 log L0 - log 2 = {show(p['cond'], 6)} > 0", p['cond'] > 0)
 check("e^V >= 73.2 (Schoenfeld applies to psi(e^V))", p['V'].exp() > 74)
-check(f"M closed form: M = 2gL - g^2 - 3.9461 L - 1.9025 - 2L^2 e^-V (exact coefficient 3.946003...)",
-      p['M'] >= 2 * p['g'] * L0 - p['g'] ** 2 - arb("3.9461") * L0 - arb("1.9025") - 2 * L0 ** 2 * (-p['V']).exp())
+check(f"M closed form: M >= 2dL - d^2 - 3.9461 L - 1.9025 - 2L^2 e^-V - 2L^4 e^-L - L^4 e^(-L/2)/(2 pi)",
+      p['M'] >= 2 * p['g'] * L0 - p['g'] ** 2 - arb("3.9461") * L0 - arb("1.9025") - 2 * L0 ** 2 * (-p['V']).exp()
+      - 2 * L0 ** 4 * (-L0).exp() - L0 ** 4 * (-L0 / 2).exp() / (2 * PI))
 print(f"  M(L0) = {show(p['M'], 8)},  Rt(L0) = {show(p['Rt'], 8)},  E(L0) = {show(p['E'], 6)}, "
       f"R_T(L0) = {show(p['sRT'], 4)}, B(L0) = {show(p['B'], 3)}")
 check("M(L0) > Rt(L0)", p['M'] > p['Rt'])
 check(f"T/delta <= T_main + T_pr + R_T = {show(p['T'], 6)} <= L0^2 = {show(L0**2, 6)}", p['T'] <= L0 ** 2)
 # monotonicity constants (each bound below is decreasing in L, so its value at L0 is the worst case)
-check("M' >= 2g + 4 - 4g/L - 3.9461 > 0 at L0 (g >= 9.6, g/L decreasing)",
-      p['g'] >= arb("9.6") and 2 * p['g'] + 4 - 4 * p["g"] / L0 - arb("3.9461") > 0)
+check(f"d(L0) = {show(p['g'], 6)} >= 8.9; M' >= 2d + 4 - 4d/L - 3.9461 > 0 at L0 (d/L decreasing)",
+      p['g'] >= arb("8.9") and 2 * p['g'] + 4 - 4 * p["g"] / L0 - arb("3.9461") > 0)
+check("L^4 e^-L and L^4 e^(-L/2) decrease for L > 8 (L0 > 8)", L0 > 8)
 check("R_T terms: log-derivative <= 5/L + 1.5/sqrt(L) - 1 < 0 at L0",
       5 / L0 + arb("1.5") / L0.sqrt() - 1 < 0)
 up = 1 - arb("1.5") / L0.sqrt()                       # u' >= this, increasing in L
@@ -232,6 +257,6 @@ check("cond increasing: 1 - 1.5/sqrt(L) - 4/L > 0 at L0", 1 - arb("1.5") / L0.sq
 # ratio of (*) at L0 for the record
 T = p['T']
 s = p['E'].sqrt() + p['B'].sqrt()
-ratio = (T.sqrt() + s) ** 2 / (2 * L0 ** 2 * p['m_low'])
+ratio = (T.sqrt() + s) ** 2 / (L0 ** 2 * p['cover'])
 print(f"  ratio of the two sides of (*) at L0: {show(ratio, 6)}")
 print("ALL CHECKS PASSED")

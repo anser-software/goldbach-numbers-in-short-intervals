@@ -1,4 +1,4 @@
-% Version 0.5, 23 November 2026.  Build: ~/.local/bin/tectonic -X compile goldbach_short_intervals.tex  (Tectonic 0.17.0).
+% Version 0.6, 24 November 2026.  Build: ~/.local/bin/tectonic -X compile goldbach_short_intervals.tex  (Tectonic 0.17.0).
 % The numbering of Theorem 1 -- Remark 14 is referenced by the Lean formalization and the README;
 % new remarks must stay unnumbered (remark*).
 \documentclass[11pt]{amsart}
@@ -27,16 +27,16 @@
 \setlist[enumerate]{itemsep=2pt,topsep=4pt}
 \setlist[itemize]{itemsep=2pt,topsep=4pt}
 
-\title[Goldbach numbers in short intervals]{Goldbach numbers in intervals of length $2\log^2 x$\\ under the Riemann hypothesis}
+\title[Goldbach numbers in short intervals]{Goldbach numbers in intervals of length $\log^2 x$\\ under the Riemann hypothesis}
 \author{Anton Vynohradov}
 \urladdr{https://orcid.org/0009-0002-6771-3681}
-\date{Version 0.5, 23 November 2026}
+\date{Version 0.6, 24 November 2026}
 \subjclass[2020]{Primary 11P32; Secondary 11M26, 11N05}
 \keywords{Goldbach numbers, short intervals, Riemann hypothesis, explicit formula, Selberg integral}
 
 \begin{document}
 \begin{abstract}
-Assuming the Riemann hypothesis, we prove that for every $x\ge 4$ the interval $(x,x+2\log^2x]$ contains an even integer that is a sum of two primes. The best published constant was $123$, due to Chirre and Hagen, and Hubbard has since announced $4.45$ in a preprint. The improvement comes from three changes to the classical Selberg-integral argument. We pair intervals of relative length. We use a positive-definite weight on the logarithmic scale whose width grows like $\sqrt{\log x}$. And we evaluate the resulting zero sums exactly by the Weil explicit formula, which also makes the prime-power contribution negligible. The constant $2$ is the limit of the method, and we compare it heuristically with Goldston's deduction, which reaches the same constant from mean-square bounds of the same size.
+Assuming the Riemann hypothesis, we prove that for every real $x\ge r=4.0462\ldots$ the interval $(x,x+\log^2x]$ contains an even integer that is a sum of two primes, where $r+\log^2r=6$. The starting point is sharp, and $2/\log^24=1.0406\ldots$ is the optimal constant on the whole range $x\ge4$. The best published constant was $123$, due to Chirre and Hagen. Hubbard has since announced $4.45$ in a preprint, and version~0.5 of this paper gave $2$. The improvement comes from four changes to the classical Selberg-integral argument. We pair intervals of relative length. We use a positive-definite weight on the logarithmic scale whose width grows like $\sqrt{\log x}$. We evaluate the resulting zero sums exactly by the Weil explicit formula, which also makes the prime-power contribution negligible. And a first moment of the primes over level sets of the weight that are symmetric about $x/2$ doubles the lower bound that an empty interval forces on the weighted Selberg integral. The constant $1$ is the limit of the method.
 \end{abstract}
 \maketitle
 
@@ -45,20 +45,20 @@ Assuming the Riemann hypothesis, we prove that for every $x\ge 4$ the interval $
 
 A \emph{Goldbach number} is an even integer that is the sum of two primes. The binary Goldbach conjecture asserts that every even integer greater than $2$ is a Goldbach number. It has been verified up to $4\cdot10^{18}$~\cite{OHP} but remains open. A weaker question is how long an interval must be before it is certain to contain a Goldbach number.
 
-Under the Riemann hypothesis (RH), Linnik~\cite{Linnik} showed that $[N,N+(\log N)^{3+\varepsilon}]$ contains a Goldbach number for large $N$. Kátai~\cite{Katai} and Montgomery--Vaughan~\cite{MV} reduced the length to $C\log^2N$, and this order has not been improved under RH alone. Goldston~\cite{Goldston} gave a different deduction which, under the pair-correlation conjecture, yields $(2+\varepsilon)\log N$. Explicit values of $C$, valid for all $x\ge2$, are $9696$ (Cully-Hugill--Dudek~\cite{CHD}) and $123$ (Chirre--Hagen~\cite{CH}). More recently, Hubbard~\cite{Hubbard} has announced $C=4.45$ for $x\ge3$, for the open interval $(x,x+4.45\log^2x)$, in a preprint that has not been refereed. Our main result is the following.
+Under the Riemann hypothesis (RH), Linnik~\cite{Linnik} showed that $[N,N+(\log N)^{3+\varepsilon}]$ contains a Goldbach number for large $N$. Kátai~\cite{Katai} and Montgomery--Vaughan~\cite{MV} reduced the length to $C\log^2N$, and this order has not been improved under RH alone. Goldston~\cite{Goldston} gave a different deduction which, under the pair-correlation conjecture, yields $(2+\varepsilon)\log N$. Explicit values of $C$, valid for all $x\ge2$, are $9696$ (Cully-Hugill--Dudek~\cite{CHD}) and $123$ (Chirre--Hagen~\cite{CH}). More recently, Hubbard~\cite{Hubbard} has announced $C=4.45$ for $x\ge3$, for the open interval $(x,x+4.45\log^2x)$, in a preprint that has not been refereed, and version~0.5 of the present paper gave $C=2$ for $x\ge4$. Our main result is the following.
 
 \begin{theorem}\label{thm:main}
-Assume RH. For every $x\ge4$ the interval $(x,\,x+2\log^2x]$ contains a Goldbach number.
+Assume RH. Let $r=4.0462095747\ldots$ be the solution of $r+\log^2r=6$. For every real $x\ge r$ the interval $(x,\,x+\log^2x]$ contains a Goldbach number, and for $4\le x<r$ it contains none. Consequently $C_*=2/\log^24=1.0406\ldots$ is the least $C$ such that $(x,\,x+C\log^2x]$ contains a Goldbach number for every $x\ge4$.
 \end{theorem}
 
-For $x<3.9\cdot10^{18}$ the theorem follows from the verification of the binary Goldbach conjecture up to $4\cdot10^{18}$~\cite{OHP} (see \S\ref{sec:proof}). The content of the paper is the range $x\ge3.9\cdot10^{18}$.
+For $x<3.9\cdot10^{18}$ the theorem follows from the verification of the binary Goldbach conjecture up to $4\cdot10^{18}$~\cite{OHP} and from the Goldbach number $6$ (see \S\ref{sec:proof}). The content of the paper is the range $x\ge3.9\cdot10^{18}$.
 
-\begin{remark}[The constant $2$]
-The proof gives the ratio $\mathrm{(required\ length)}/(2\log^2x)\to1$ from below, with a margin of order $\log\log x/\log x$. So $2$ is the limit of the method. In \S\ref{sec:optimality} we compare it heuristically with Goldston's deduction~\cite{Goldston}, which reaches the same constant from mean-square bounds of the same size. Going below $2$ along either route appears to need an RH-only improvement of the mean-square bound for primes in intervals of length $\asymp\log^2x$, or of averaged prime-pair counts at such shifts.
+\begin{remark}[The constant $1$]
+The proof gives the ratio $\mathrm{(required\ length)}/\log^2x\to1$ from below, with a margin of order $\log\log x/\log x$. So $1$ is the limit of the method. Version~0.5 used only the prime-free member of each pair of intervals and reached $2$, the same constant that Goldston's deduction~\cite{Goldston} gives from mean-square bounds of the same size (\S\ref{sec:optimality}). Lemma~\ref{lem:cover} also uses the other member, which must then carry about twice the expected number of primes. Going below $1$ appears to need an RH-only improvement of the mean-square bound for primes in intervals of length $\asymp\log^2x$, or of averaged prime-pair counts at such shifts.
 \end{remark}
 
 \begin{remark}[Fixed kernel]
-With a kernel of fixed width ($V=28$ below), a floating-point computation indicates that the same argument gives the constant $2.05$, with a margin of about $22\%$ at $x=4\cdot10^{18}$ and $0.2\%$ as $x\to\infty$. This computation has not been made rigorous and is not part of the proof; we do not give details.
+The width $V\asymp\sqrt{\log x}$ matters. With a kernel of fixed width the quantity $m_W$ of Corollary~\ref{cor:m} stays below $\tfrac12$ by a fixed amount, so the method gives a constant strictly above $1$. For the cover of version~0.5 and $V=28$, a floating-point computation gave $2.05$. We have not repeated it for the present cover, and neither computation is part of the proof.
 \end{remark}
 
 \subsection{The classical argument and what we change}
@@ -72,15 +72,16 @@ Chirre and Hagen bound the Selberg integral by
 \[
 \int_{ax}^x(\theta((1+\delta)y)-\theta(y)-\delta y)^2\dd y\le K\delta x^2\log^2(2.0001/\delta),\qquad K=2.5571
 \]
-\cite[Thm.~3]{CH}. They then use the Montgomery--Vaughan covering, which pairs intervals of absolute length $h/2$ and integrates the prime-free deficit $\delta^2y^2$ against Lebesgue measure. This gives $C=48K$. Hubbard~\cite{Hubbard} keeps this framework. He replaces the sharp cutoff in the mean square by a smooth weight, which lowers the mean-square constant from $2.2258$ to $1.0069$ in his normalisation~\cite[\S1]{Hubbard}, and he weights the final deduction; this gives $4.45$. We instead remove three losses in the argument.
+\cite[Thm.~3]{CH}. They then use the Montgomery--Vaughan covering, which pairs intervals of absolute length $h/2$ and integrates the prime-free deficit $\delta^2y^2$ against Lebesgue measure. This gives $C=48K$. Hubbard~\cite{Hubbard} keeps this framework. He replaces the sharp cutoff in the mean square by a smooth weight, which lowers the mean-square constant from $2.2258$ to $1.0069$ in his normalisation~\cite[\S1]{Hubbard}, and he weights the final deduction; this gives $4.45$. We instead remove four losses in the argument.
 \begin{enumerate}[label=(\arabic*)]
 \item \emph{Relative intervals.} If $p\in(y,(1+\delta)y]$ and $q\in(x-y,(1+\delta)(x-y)]$, then $p+q\in(x,(1+\delta)x]$. So relative intervals with $\delta=H/x$ suffice, which saves a factor $2$.
 \item \emph{A weight that matches the deficit.} The deficit $\delta^2y^2$ is tiny for small $y$, while the unweighted integral is dominated by $y\approx x$. The weight $\omega(y)=(x/y)^2W(\log(x/y))$ makes the deficit uniform. This saves the factor $24=1/\int_0^{1/2}u^2\dd u$, up to $\int_{\log2}^\infty W(v)e^{-v}\dd v\le\tfrac12$.
 \item \emph{Exact evaluation of the zero sum.} With $W$ positive definite, Schur's test and the Weil explicit formula evaluate the zero double sum exactly, up to explicit remainders. The prime terms of the explicit formula, averaged over the zeros, contribute the positive cost $2\delta\sum_n\Lambda(n)^2W(\log n)/n\approx2\delta\int_0^VvW$. This cost is $O(V^2)=o(\log^2x)$ when $V\asymp\sqrt{\log x}$. The weight also kills prime powers below $xe^{-V}$, so the difference between $\theta$ and $\psi$ becomes negligible.
+\item \emph{A first moment over symmetric level sets.} The covering above uses only the prime-free member of each pair. The other member then contains, on average, twice the expected number of primes. We integrate over the superlevel sets of a weight that is symmetric about $x/2$. On each of them the identity $(a-1)^2+(b-1)^2=2(a+b)-2+(a+b-2)^2$, valid when $ab=0$, turns this first moment into a second deficit of the same size. This saves a further factor $2$.
 \end{enumerate}
 
 \subsection{Outline}
-Section~\ref{sec:kernel} constructs the weight $W$ and lists its properties. Section~\ref{sec:cover} turns the absence of Goldbach numbers into a lower bound for a weighted Selberg integral (Lemma~\ref{lem:cover}). Sections~\ref{sec:schur}--\ref{sec:arith} bound the same integral from above under RH. The explicit formula splits it into a sum over zeros, a small term from the trivial zeros and a prime-power term (\S\ref{sec:schur}). The sum over zeros is evaluated with the Weil explicit formula (\S\ref{sec:weil}) and Stieltjes integration against the zero-counting function (\S\ref{sec:main}). Section~\ref{sec:arith} collects the arithmetic input. Section~\ref{sec:proof} combines the bounds and proves Theorem~\ref{thm:main}. Section~\ref{sec:optimality} compares the method heuristically with Goldston's deduction; nothing in it is used in the proof. Appendix~\ref{app:comp} lists the computations.
+Section~\ref{sec:kernel} constructs the weight $W$ and lists its properties. Section~\ref{sec:cover} turns the absence of Goldbach numbers into a lower bound for a weighted Selberg integral (Lemma~\ref{lem:cover}); this step uses RH only through Schoenfeld's bound for $\theta$. Sections~\ref{sec:schur}--\ref{sec:arith} bound the same integral from above under RH. The explicit formula splits it into a sum over zeros, a small term from the trivial zeros and a prime-power term (\S\ref{sec:schur}). The sum over zeros is evaluated with the Weil explicit formula (\S\ref{sec:weil}) and Stieltjes integration against the zero-counting function (\S\ref{sec:main}). Section~\ref{sec:arith} collects the arithmetic input. Section~\ref{sec:proof} combines the bounds and proves Theorem~\ref{thm:main}. Section~\ref{sec:optimality} compares the method heuristically with Goldston's deduction; nothing in it is used in the proof. Appendix~\ref{app:comp} lists the computations.
 
 \subsection{Notation}
 Throughout, $p$ denotes a prime and $\Lambda$ is the von Mangoldt function. The Chebyshev functions are $\theta(t)=\sum_{p\le t}\log p$ and $\psi(t)=\sum_{n\le t}\Lambda(n)$. Under RH we write the nontrivial zeros of $\zeta$ as $\rho=\frac12+i\gamma$. Sums over $\rho$ or $\gamma$ run over all nontrivial zeros, of both signs, counted with multiplicity. We write $\gamma_E$ for Euler's constant. The Fourier transform is $\widehat f(\xi)=\int f(v)e^{-iv\xi}\dd v$.
@@ -137,19 +138,48 @@ V_\theta(y)=\theta((1+\delta)y)-\theta(y)-\delta y,\qquad \omega(y)=\Big(\frac x
 The next lemma shows that if $(x,x+H]$ contains no Goldbach number, then the weighted Selberg integral $\|V_\theta\|_\omega^2$ is large.
 
 \begin{lemma}\label{lem:cover}
-Suppose $V\ge\log2$, $xe^{-V}>2$, and that $(x,x+H]$ contains no Goldbach number. Then $\|V_\theta\|_\omega^2\ge\delta^2x^3m_W$.
+Assume RH. Let $L=\log x$, and suppose that $V\ge\log2$, $xe^{-V}\ge599$, and that $(x,x+H]$ contains no Goldbach number. Then
+\[
+\|V_\theta\|_\omega^2\ \ge\ \delta^2x^3\Big(2m_W-2\delta-\frac{L^2}{2\pi\sqrt x}\Big).
+\]
 \end{lemma}
 
 \begin{proof}
-Let $y_0=xe^{-V}$, so that $y_0\le x/2$, and let $y_0\le y\le x/2$. Primes in $(y,(1+\delta)y]$ and in $(x-y,(1+\delta)(x-y)]$ would be odd, and their sum would be an even number in $(x,x+H]$. So for at least one $z\in\{y,x-y\}$ the interval $(z,(1+\delta)z]$ contains no prime, and $V_\theta(z)=-\delta z$. Then
+Put $G(y)=(\theta((1+\delta)y)-\theta(y))/(\delta y)$. Then $V_\theta(y)=\delta y(G(y)-1)$, and
 \[
-V_\theta(z)^2\omega(z)=\delta^2x^2W(\log(x/z)).
+\|V_\theta\|_\omega^2=\delta^2x^2\int_0^\infty W(\log(x/y))\,(G(y)-1)^2\dd y .
 \]
-Since $y\le z\le x$ and $W$ is nonincreasing on $[0,\infty)$, this is at least $\delta^2x^2W(\log(x/y))$. The pairs $\{y,x-y\}$ with $y\in[y_0,x/2]$ are disjoint up to the midpoint. Summing over them gives
+
+\step{The symmetric weight} For $0<y<x$ let $q(y)=\min\{W(\log(x/y)),W(\log(x/(x-y)))\}$. Then $0\le q(y)\le W(\log(x/y))$, so it suffices to bound $\int_0^xq\,(G-1)^2$ from below. By Lemma~\ref{lem:kernel}(i), for $0\le s<1$ the set $\{v\ge0:W(v)>s\}$ is an interval $[0,v_s)$ with $v_s\le V$. Hence $W(\log(x/y))>s$ exactly when $y>A:=xe^{-v_s}$, and $W(\log(x/(x-y)))>s$ exactly when $x-y>A$. So the superlevel set $I_s=\{y\in(0,x):q(y)>s\}$ is $(A,x-A)$, which is empty unless $A<x/2$, and $A\ge xe^{-V}$.
+
+\step{One level} Fix $s$ with $I_s=(A,B)$ nonempty, $B=x-A$. For $y\in I_s$ both $y$ and $x-y$ exceed $A\ge599$. If both $(y,(1+\delta)y]$ and $(x-y,(1+\delta)(x-y)]$ contained primes, these would be odd and their sum would be an even number in $(x,x+H]$. Hence $G(y)G(x-y)=0$. For $a,b\ge0$ with $ab=0$,
 \[
-\|V_\theta\|_\omega^2\ \ge\ \delta^2x^2\int_{y_0}^{x/2}W(\log(x/y))\dd y=\delta^2x^3\int_{\log2}^{V}W(v)e^{-v}\dd v.\qedhere
+(a-1)^2+(b-1)^2=2(a+b)-2+(a+b-2)^2\ \ge\ 2(a+b)-2 .
 \]
+Apply this with $a=G(y)$ and $b=G(x-y)$, integrate over $I_s$, and use the symmetry $y\mapsto x-y$ of $I_s$:
+\begin{equation}\label{eq:pair}\tag{P}
+\int_{I_s}(G-1)^2\dd y\ \ge\ 2\int_{I_s}G\dd y-|I_s| .
+\end{equation}
+A prime $p$ with $(1+\delta)A<p\le B$ contributes $\log p\int_{p/(1+\delta)}^{p}\dd y/(\delta y)=(\ell/\delta)\log p$ to $\int_{I_s}G$, and the other primes contribute nonnegative amounts. So
+\[
+\int_{I_s}G\dd y\ \ge\ \frac\ell\delta\big(\theta(B)-\theta((1+\delta)A)\big),
+\]
+which holds trivially if $(1+\delta)A\ge B$. Under RH, Schoenfeld's bound~\cite[Thm.~10, (6.3)]{Schoenfeld} gives $|\theta(t)-t|<\sqrt t\log^2t/(8\pi)\le\sqrt x\,L^2/(8\pi)$ for $599\le t\le x$. Put $D_0=|I_s|-\delta A-\sqrt xL^2/(4\pi)$, so that $\theta(B)-\theta((1+\delta)A)\ge D_0$. We have $1-\delta\le(1+\delta)^{-1}\le\ell/\delta\le1$ and $|I_s|+A\le x$. If $D_0\ge0$, then $(\ell/\delta)D_0\ge(1-\delta)D_0\ge D_0-\delta|I_s|$. If $D_0<0$, then $(\ell/\delta)D_0\ge D_0$. In both cases
+\[
+\int_{I_s}G\dd y\ \ge\ |I_s|-\delta x-\frac{\sqrt xL^2}{4\pi}.
+\]
+With \eqref{eq:pair} this gives $\int_{I_s}(G-1)^2\ge|I_s|-2\delta x-\sqrt xL^2/(2\pi)$, which holds trivially when $I_s$ is empty.
+
+\step{All levels} Integrate over $0<s<1$ and use $q(y)=\int_0^1\mathbf 1_{\{q(y)>s\}}\dd s$:
+\[
+\int_0^xq\,(G-1)^2\dd y\ \ge\ \int_0^xq\dd y-2\delta x-\frac{\sqrt xL^2}{2\pi}.
+\]
+For $0<y\le x/2$ we have $\log(x/y)\ge\log(x/(x-y))\ge0$, so $q(y)=W(\log(x/y))$. By symmetry $\int_0^xq=2\int_0^{x/2}W(\log(x/y))\dd y=2xm_W$. Multiplying by $\delta^2x^2$ proves the lemma.
 \end{proof}
+
+\begin{remark*}
+Version~0.5 used only the prime-free member $z\in\{y,x-y\}$ of each pair, where $V_\theta(z)=-\delta z$, and obtained $\|V_\theta\|_\omega^2\ge\delta^2x^3m_W$ without RH. Lemma~\ref{lem:cover} doubles the main term. On each symmetric level the occupied member carries, by the prime number theorem, about twice the expected number of primes, and the square $(a+b-2)^2\ge0$ turns this excess into a second deficit.
+\end{remark*}
 
 %======================================================================
 \section{The explicit formula and the Schur bound}\label{sec:schur}
@@ -377,31 +407,33 @@ Insert $N\le N_0+\log t+4$, from \eqref{eq:Q} in the proof of Lemma~\ref{lem:mai
 %======================================================================
 \section{Proof of Theorem~\ref{thm:main}}\label{sec:proof}
 
-\subsection{Small $x$} For $4\le x<3.9\cdot10^{18}$ the interval $(x,x+2\log^2x]$ has length greater than $2$. It therefore contains an even $N$ with $6\le N<4\cdot10^{18}$, and $N$ is a Goldbach number by~\cite{OHP}.\footnote{The authors of~\cite{OHP} double-checked the whole range up to $3\cdot10^{17}$. Beyond that they double-checked about $4\%$ of the intervals, compared prime counts in residue classes modulo $120$ with an independent program for every interval of $10^{15}$ integers, and found no discrepancy~\cite[\S1]{OHP}.}
+\subsection{Small $x$} The function $x+\log^2x$ increases for $x\ge1$, and $r$ is where it equals $6$. For $4\le x<r$ the interval $(x,x+\log^2x]$ lies in $(4,6)$ and contains no even integer. For $r\le x<6$ it contains the Goldbach number $6=3+3$. For $6\le x<3.9\cdot10^{18}$ it has length $\log^2x>2$, so it contains an even $N$ with $6<N<4\cdot10^{18}$, and $N$ is a Goldbach number by~\cite{OHP}.\footnote{The authors of~\cite{OHP} double-checked the whole range up to $3\cdot10^{17}$. Beyond that they double-checked about $4\%$ of the intervals, compared prime counts in residue classes modulo $120$ with an independent program for every interval of $10^{15}$ integers, and found no discrepancy~\cite[\S1]{OHP}.}
+
+Once the range $x\ge3.9\cdot10^{18}$ is settled below, this proves the first two statements of Theorem~\ref{thm:main}. For the third, $C_*>1$ covers $x\ge r$. For $4\le x<r$ the interval $(x,x+C_*\log^2x]$ contains $6$, since $x+C_*\log^2x\ge4+C_*\log^24=6$. Conversely, at $x=4$ the least even integer above $x$ is $6$, so no $C<C_*$ works.
 
 \subsection{Large $x$: setup} Let $x\ge3.9\cdot10^{18}$, and put
 \[
-L=\log x\ge L_0=\log(3.9\cdot10^{18})=42.8075\ldots,\qquad H=2L^2,\qquad \delta=2L^2/x,\qquad V=3\sqrt L .
+L=\log x\ge L_0=\log(3.9\cdot10^{18})=42.8075\ldots,\qquad H=L^2,\qquad \delta=L^2/x,\qquad V=3\sqrt L .
 \]
 One checks that
 \begin{equation}\label{eq:cond}
 L-V-4\log L-\log2>0;
 \end{equation}
-the left side equals $7.46$ at $L_0$ and increases with $L$. Condition \eqref{eq:cond} implies $\delta e^V<1$, $\ell<1/14$, $xe^{-V}\ge3$, and that each interval $(y,(1+\delta)y]$ with $y\le2xe^V$ contains at most one $k$-th power for each $k$.
+the left side equals $7.46$ at $L_0$ and increases with $L$. Condition \eqref{eq:cond} implies $\delta e^V<1$, $\ell<1/14$, $xe^{-V}\ge599$, and that each interval $(y,(1+\delta)y]$ with $y\le2xe^V$ contains at most one $k$-th power for each $k$.
 
 Suppose $(x,x+H]$ contains no Goldbach number. By Lemmas~\ref{lem:cover}, \ref{lem:schur}, \ref{lem:BP} and the triangle inequality,
 \begin{equation}\label{eq:star}
-\delta^2x^3m_W\le\|V_\theta\|_\omega^2\le\big(\|A\|_\omega+\|B\|_\omega+\|P\|_\omega\big)^2\le\delta x^2\big(\sqrt{\mathcal T/\delta}+\sqrt{\mathcal E}+\sqrt{\mathcal B}\big)^2,
+\delta^2x^3\Big(2m_W-2\delta-\frac{L^2}{2\pi\sqrt x}\Big)\le\|V_\theta\|_\omega^2\le\big(\|A\|_\omega+\|B\|_\omega+\|P\|_\omega\big)^2\le\delta x^2\big(\sqrt{\mathcal T/\delta}+\sqrt{\mathcal E}+\sqrt{\mathcal B}\big)^2,
 \end{equation}
-where $\mathcal E=\|P\|_\omega^2/(\delta x^2)$ and $\mathcal B=\|B\|_\omega^2/(\delta x^2)$. Only the first inequality uses the assumption on $(x,x+H]$. Since $\delta x=2L^2$, a contradiction follows once
+where $\mathcal E=\|P\|_\omega^2/(\delta x^2)$ and $\mathcal B=\|B\|_\omega^2/(\delta x^2)$. Only the first inequality uses the assumption on $(x,x+H]$. Since $\delta x=L^2$, a contradiction follows once
 \begin{equation}\label{eq:target}
-\big(\sqrt{\mathcal T/\delta}+\sqrt{\mathcal E}+\sqrt{\mathcal B}\big)^2<2L^2m_W .
+\big(\sqrt{\mathcal T/\delta}+\sqrt{\mathcal E}+\sqrt{\mathcal B}\big)^2<L^2\Big(2m_W-2\delta-\frac{L^2}{2\pi\sqrt x}\Big).
 \end{equation}
 
 \subsection{The bounds} We bound each quantity in \eqref{eq:target}.
 
 \begin{proposition}\label{prop:table}
-Under the above assumptions, $\mathcal T/\delta\le T_{\rm main}+T_{\rm pr}+R_T$, $\mathcal E\le\mathcal E^+$, $\mathcal B\le\mathcal B^+$ and $m_W\ge m_{\rm low}$, where these quantities are the bounds of Table~\ref{tab:rem} and $\Lambda_1^0=L-2\log L-\log2\pi$.
+Under the above assumptions, $\mathcal T/\delta\le T_{\rm main}+T_{\rm pr}+R_T$, $\mathcal E\le\mathcal E^+$, $\mathcal B\le\mathcal B^+$ and $m_W\ge m_{\rm low}$, where these quantities are the bounds of Table~\ref{tab:rem} and $\Lambda_1^0=L-2\log L-\log\pi$.
 \end{proposition}
 
 \begin{table}[ht]
@@ -483,17 +515,17 @@ It remains to show that the bounds of Proposition~\ref{prop:table} imply \eqref{
 
 Put $s=\sqrt{\mathcal E}+\sqrt{\mathcal B}$. Recall that $m_{\rm low}\le m_W$. Since $(\sqrt{\mathcal T/\delta}+s)^2\le T_{\rm main}+T_{\rm pr}+R_T+2\sqrt{\mathcal T/\delta}\,s+s^2$, inequality \eqref{eq:target} follows from $\mathcal M(L)>\mathcal R(L)$, where
 \begin{align*}
-\mathcal M(L)&=2L^2m_{\rm low}-T_{\rm main}-T_{\rm pr},\\
+\mathcal M(L)&=L^2\Big(2m_{\rm low}-2\delta-\frac{L^2}{2\pi\sqrt x}\Big)-T_{\rm main}-T_{\rm pr},\\
 \mathcal R(L)&=R_T+2\sqrt{\mathcal T/\delta}\;s+s^2 .
 \end{align*}
-Let $g=2\log L+\log2\pi-a_1$, so that $T_{\rm main}=(L-g)^2+a_2-a_1^2$. Since $2\cdot9.55/9+18/\pi^2<3.9461$ and $a_2-a_1^2+0.08<1.9025$,
+Let $d=2\log L+\log\pi-a_1$, so that $T_{\rm main}=(L-d)^2+a_2-a_1^2$. Since $2\cdot9.55/9+18/\pi^2<3.9461$, $a_2-a_1^2+0.08<1.9025$, $L^2\delta=L^4e^{-L}$ and $\sqrt x=e^{L/2}$,
 \[
-\mathcal M\ge2gL-g^2-3.9461L-1.9025-2L^2e^{-3\sqrt L}.
+\mathcal M\ge2dL-d^2-3.9461L-1.9025-2L^2e^{-3\sqrt L}-2L^4e^{-L}-\frac{L^4e^{-L/2}}{2\pi}.
 \]
 
-\step{$\mathcal M$ increases} The derivative of the polynomial part is $2g+4-4g/L-3.9461$. For $L\ge L_0$ we have $g\ge9.6$ and $4g/L\le0.9$, since $g/L$ decreases, so the derivative is positive. Also $L^2e^{-3\sqrt L}$ decreases for $L>16/9$.
+\step{$\mathcal M$ increases} The derivative of the polynomial part is $2d+4-4d/L-3.9461$. For $L\ge L_0$ we have $d\ge8.9$ and $4d/L\le0.9$, since $d/L$ decreases, so the derivative is positive. Also $L^2e^{-3\sqrt L}$ decreases for $L>16/9$, and $L^4e^{-L}$ and $L^4e^{-L/2}$ decrease for $L>8$.
 
-\step{A decreasing majorant of $\mathcal R$} First, $\mathcal T/\delta\le T_{\rm main}+T_{\rm pr}+R_T\le L^2-\mathcal M(L)+R_T$. Below we show $\mathcal M(L)-R_T(L)\ge\mathcal M(L_0)-\widetilde{\mathcal R}(L_0)>0$, so $\mathcal T/\delta\le L^2$. Since $\mathcal E\le\mathcal E^+$ and $\mathcal B\le\mathcal B^+$, this gives $\mathcal R\le\widetilde{\mathcal R}$, where
+\step{A decreasing majorant of $\mathcal R$} First, since $2m_{\rm low}\le1$, $\mathcal T/\delta\le T_{\rm main}+T_{\rm pr}+R_T\le L^2-\mathcal M(L)+R_T$. Below we show $\mathcal M(L)-R_T(L)\ge\mathcal M(L_0)-\widetilde{\mathcal R}(L_0)>0$, so $\mathcal T/\delta\le L^2$. Since $\mathcal E\le\mathcal E^+$ and $\mathcal B\le\mathcal B^+$, this gives $\mathcal R\le\widetilde{\mathcal R}$, where
 \[
 \widetilde{\mathcal R}=R_T+2\sqrt{L^2\mathcal E^+}+2\sqrt{L^2\mathcal B^+}+\big(\sqrt{\mathcal E^+}+\sqrt{\mathcal B^+}\big)^2
 \]
@@ -505,22 +537,22 @@ is an explicit function of $L$. It increases in each of $R_T$, $L^2\mathcal E^+$
 \item $\mathcal E^+=(L^2\mathcal E^+)/L^2$ and $\mathcal B^+=(L^2\mathcal B^+)/L^2$ then decrease as well.
 \end{itemize}
 
-\step{Endpoint} In interval arithmetic, $\mathcal M(L_0)=560.36\ldots$ and $\widetilde{\mathcal R}(L_0)=17.11\ldots$, with $\mathcal E^+(L_0)=0.0398$, $R_T(L_0)<10^{-6}$ and $\mathcal B^+(L_0)<10^{-65}$. Hence, for all $L\ge L_0$,
+\step{Endpoint} In interval arithmetic, $\mathcal M(L_0)=513.87\ldots$ and $\widetilde{\mathcal R}(L_0)=17.11\ldots$, with $\mathcal E^+(L_0)=0.0398$, $R_T(L_0)<10^{-6}$ and $\mathcal B^+(L_0)<10^{-65}$. Hence, for all $L\ge L_0$,
 \[
 \mathcal M(L)\ge\mathcal M(L_0)>\widetilde{\mathcal R}(L_0)\ge\widetilde{\mathcal R}(L)\ge\mathcal R(L),
 \]
 which contradicts \eqref{eq:star}. This proves Theorem~\ref{thm:main}. \qed
 
 \begin{remark}\label{rem:ratio}
-Replace the left side of \eqref{eq:target} by its upper bound $\big(\sqrt{T_{\rm main}+T_{\rm pr}+R_T}+\sqrt{\mathcal E^+}+\sqrt{\mathcal B^+}\big)^2$, and $m_W$ by $m_{\rm low}$. The ratio of the two sides is then $0.686$ at $L_0$, $0.972$ at $L=10^3$, $0.99994$ at $L=10^6$ and $0.9999993$ at $L=10^8$, and it tends to $1$ like $1-4\log L/L$. It is an upper bound for the true ratio. For example, at $L_0$ the exact value $m_W=0.47834\ldots$ (against $m_{\rm low}=0.47521\ldots$) already lowers it to $0.6817$.
+Replace the left side of \eqref{eq:target} by its upper bound $\big(\sqrt{T_{\rm main}+T_{\rm pr}+R_T}+\sqrt{\mathcal E^+}+\sqrt{\mathcal B^+}\big)^2$, and $m_W$ by $m_{\rm low}$. The ratio of the two sides is then $0.713$ at $L_0$, $0.974$ at $L=10^3$, $0.99995$ at $L=10^6$ and $0.9999993$ at $L=10^8$, and it tends to $1$ like $1-4\log L/L$. It is an upper bound for the true ratio. For example, at $L_0$ the exact value $m_W=0.47834\ldots$ (against $m_{\rm low}=0.47521\ldots$) already lowers it to $0.708$.
 \end{remark}
 
 %======================================================================
-\section{On the constant $2$}\label{sec:optimality}
+\section{On the constants $1$ and $2$}\label{sec:optimality}
 
 This section is heuristic. Nothing in it is used in the proof of Theorem~\ref{thm:main}.
 
-Our argument reaches the constant $2$ and no less, because the ratio in Remark~\ref{rem:ratio} tends to $1$. Goldston~\cite{Goldston} gave a different deduction of Goldbach numbers from mean-square bounds. He proves~\cite[Theorem, eq.~(6)]{Goldston}
+Our argument reaches the constant $1$ and no less, because the ratio in Remark~\ref{rem:ratio} tends to $1$. With the cover of version~0.5, which uses only the prime-free member of each pair, the same estimates reach $2$. Goldston~\cite{Goldston} gave a different deduction of Goldbach numbers from mean-square bounds. He proves~\cite[Theorem, eq.~(6)]{Goldston}
 \[
 \Big|\sum_{|n|\le K}(K-|n|)R_G(N+n)-K^2N\Big|\le J(N,K)+O(KN)+o(K^2N),
 \]
@@ -530,7 +562,7 @@ J(N,K)=KN\log N+2\sum_{n<K}(K-n)Z(N;n)-K^2N+o(K^2N),\qquad Z(N;n)=\sum_{\substac
 \]
 (his eq.~(11)). Suppose RH gave $J(N,K)\le(\kappa+o(1))KN\log^2N$ for $K\asymp\log^2N$. Then, for each fixed $\varepsilon>0$ and all large $N$, the interval $(N-K,N+K)$ contains a Goldbach number once $K\ge(\kappa+\varepsilon)\log^2N$; that is, intervals of length $2(\kappa+\varepsilon)\log^2N$ suffice.
 
-Heuristically, a mean-square input of the strength of Lemma~\ref{lem:schur} and Proposition~\ref{prop:table} corresponds to $\kappa=1$, and with $\kappa=1$ Goldston's deduction gives the same constant $2$ as ours. We have not proved a transfer theorem that turns our weighted estimate for relative intervals into a bound for $J(N,K)$, so this agreement is an observation, not a theorem.
+Heuristically, a mean-square input of the strength of Lemma~\ref{lem:schur} and Proposition~\ref{prop:table} corresponds to $\kappa=1$, and with $\kappa=1$ Goldston's deduction gives the constant $2$ of the prime-free cover. We have not proved a transfer theorem that turns our weighted estimate for relative intervals into a bound for $J(N,K)$, so this agreement is an observation, not a theorem. The first moment in Lemma~\ref{lem:cover} has no counterpart in Goldston's deduction. It uses that prime counts are nonnegative and that, by the prime number theorem, the occupied member of each pair carries about twice its expected count. This halves the constant without any information on prime pairs.
 
 \subsection*{The constant $2$ in Goldston's deduction}
 Within Goldston's deduction the role of the constant $2$ can be made precise. Put
@@ -541,7 +573,7 @@ an averaged analogue of the prime-pair constant $A$ in Goldston's eq.~(14), whic
 \[
 \big(2-A(N,K)\big)K^2N\le KN\log N+O(KN)+o(K^2N).
 \]
-So for $K\asymp\log^2N$ the deduction finds a Goldbach number in $(N-K,N+K)$ for all large $N$ whenever $A(N,K)\le2-\varepsilon$ for a fixed $\varepsilon>0$, and it gives nothing when $A(N,K)\ge2+\varepsilon$. By (25), a bound $J(N,K)\le(\kappa+o(1))KN\log^2N$ at $K=c\log^2N$ is equivalent to $A(N,K)\le1+\kappa/c+o(1)$. Along this route, therefore, intervals of length $2c\log^2N$ with $c<\kappa$ require an averaged prime-pair bound $A(N,c\log^2N)<2$ that the mean-square bound does not supply. Such a bound would need information beyond the mean-square bound, for example on the pair correlation of zeros~\cite{Montgomery}. We know of no such result under RH alone.
+So for $K\asymp\log^2N$ the deduction finds a Goldbach number in $(N-K,N+K)$ for all large $N$ whenever $A(N,K)\le2-\varepsilon$ for a fixed $\varepsilon>0$, and it gives nothing when $A(N,K)\ge2+\varepsilon$. By (25), a bound $J(N,K)\le(\kappa+o(1))KN\log^2N$ at $K=c\log^2N$ is equivalent to $A(N,K)\le1+\kappa/c+o(1)$. Along this route, therefore, intervals of length $2c\log^2N$ with $c<\kappa$ require an averaged prime-pair bound $A(N,c\log^2N)<2$ that the mean-square bound does not supply. Such a bound would need information beyond the mean-square bound, for example on the pair correlation of zeros~\cite{Montgomery}. We know of no such result under RH alone. Theorem~\ref{thm:main} reaches the analogue of $c=\frac12$ by a different route, the first moment of Lemma~\ref{lem:cover}. So this obstruction belongs to Goldston's deduction, not to the mean-square input.
 
 Conversely, Goldston's Corollary~3~\cite{Goldston} shows that his eq.~(14) with some $A<2$ would give Goldbach numbers in all intervals of length $O(\log N)$, far beyond the constant $2$. He records that (14) is known with $A=3.9171$ for all $k$, and with $A=3.454$ for $k\le\log^DN$. Because of the parity phenomenon~\cite{Bombieri,FI}, we do not expect sieve methods alone to give $A<2$.
 
@@ -555,13 +587,14 @@ The research, the proofs and the text were produced largely with the AI model Cl
 \item Every numerical constant in the proof is verified in ball arithmetic (Appendix~\ref{app:comp}).
 \item Most of the deduction of Theorem~\ref{thm:main} is formalized in Lean~4 with Mathlib. The formalization covers:
 \begin{itemize}
-\item[--] Lemma~\ref{lem:kernel}(i), (ii), (iv), (v), and Lemma~\ref{lem:cover} with Corollary~\ref{cor:m};
+\item[--] Lemma~\ref{lem:kernel}(i), (ii), (iv), (v), and Lemma~\ref{lem:cover} with Corollary~\ref{cor:m}: the symmetric weight, its level sets, the first moment on each level and the integration over levels;
+\item[--] the cutoff: the statement for $x+\log^2x\ge6$, the absence of Goldbach numbers in $(x,x+\log^2x]$ when $4\le x$ and $x+\log^2x<6$, the bound with $C_*$ for all $x\ge4$, and the optimality of $C_*$ at $x=4$;
 \item[--] Lemmas~\ref{lem:schur} and~\ref{lem:BP};
 \item[--] the $\mathcal E$ row of Proposition~\ref{prop:table}, including (L3);
 \item[--] the identity $V_\theta=A+B-P$ with the triangle inequality in \eqref{eq:star};
 \item[--] the range argument for all $x\ge3.9\cdot10^{18}$, by a route independent of \S\ref{sec:proof}.
 \end{itemize}
-It takes as hypotheses RH, the explicit formula for $\psi$, the verification~\cite{OHP}, and one statement not yet formalized: the $\mathcal T$ row of Proposition~\ref{prop:table}. Its proof uses Lemma~\ref{lem:kernel}(iii) and Lemmas~\ref{lem:R}--\ref{lem:arith}, besides the parts of Lemma~\ref{lem:kernel} already formalized.
+It takes as hypotheses RH, Schoenfeld's bound~\cite[Thm.~10, (6.3)]{Schoenfeld} for $\theta$ under RH, the explicit formula for $\psi$, the verification~\cite{OHP}, and one statement not yet formalized: the $\mathcal T$ row of Proposition~\ref{prop:table}. Its proof uses Lemma~\ref{lem:kernel}(iii) and Lemmas~\ref{lem:R}--\ref{lem:arith}, besides the parts of Lemma~\ref{lem:kernel} already formalized.
 \item Each cited result used in the proof has been checked against the original publication.
 \end{itemize}
 The analytic part (\S\S\ref{sec:schur}--\ref{sec:arith}) has been checked by hand derivation and numerically against zeta zeros, but not yet by an independent expert. Comments and corrections are welcome. The paper, scripts and Lean formalization are available in the accompanying repository.
@@ -576,7 +609,8 @@ All computations are reproducible with the scripts accompanying this paper. They
 \item[--] the numerical constants in Corollary~\ref{cor:m} and Lemmas~\ref{lem:En} and \ref{lem:main}, including the polynomial $7.01\Lambda^2+44.07\Lambda+57.11$ in Step~5 of the proof of Lemma~\ref{lem:main};
 \item[--] $a_1$ and $a_2$;
 \item[--] Lemma~\ref{lem:arith}, (L2) and (L4): an exact sieve to $10^7$, with all sums in ball arithmetic, plus the closed-form RH tail; and the integral for (L4). The output gives $\sup_{t\le10^7}(S(t)-\frac12\log^2t)=0.0390683\ldots$, $S(10^7)-\frac12\log^210^7=-1.5724\ldots$, $\psi(10^7)-10^7=-1460.59\ldots$ and the RH tail constant $-1.370\ldots$;
-\item[--] condition \eqref{eq:cond}, $\mathcal M(L_0)$, $\widetilde{\mathcal R}(L_0)$, $\mathcal T/\delta\le L_0^2$, and the logarithmic-derivative constants of \S\ref{sec:proof}.
+\item[--] condition \eqref{eq:cond}, $\mathcal M(L_0)$, $\widetilde{\mathcal R}(L_0)$, $\mathcal T/\delta\le L_0^2$, and the logarithmic-derivative constants of \S\ref{sec:proof};
+\item[--] the cutoff $r$ (to $16$ digits), $C_*=2/\log^24>1$ and $\log^26>2$, used for small $x$ in \S\ref{sec:proof}; and $xe^{-V}\ge599$ at $L_0$, used in Lemma~\ref{lem:cover}.
 \end{itemize}
 \item Not used in the proof:
 \begin{itemize}

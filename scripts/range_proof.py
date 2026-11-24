@@ -1,15 +1,15 @@
-"""Rigorous range argument for C = 2 (Section 8 of the paper).
+"""Floating-point cross-check of the range argument for C = 1 (Section 8 of the paper, v0.6).
 
-Assume RH, C = 2, x >= 3.9e18, L = log x >= L0 = log(3.9e18) = 42.807..., V = 3 sqrt(L),
-delta = 2 L^2 / x, ell = log(1 + delta), sigma = pi/V.  A contradiction (hence a Goldbach number
-in (x, x + 2 log^2 x]) follows from (Section 8 of the paper, inequality (target))
+Assume RH, C = 1, x >= 3.9e18, L = log x >= L0 = log(3.9e18) = 42.807..., V = 3 sqrt(L),
+delta = L^2 / x, ell = log(1 + delta), sigma = pi/V.  A contradiction (hence a Goldbach number
+in (x, x + log^2 x]) follows from (Section 8 of the paper, inequality (target))
 
-    (sqrt(T) + sqrt(E) + sqrt(B))^2  <  2 L^2 m_W                                     (*)
+    (sqrt(T) + sqrt(E) + sqrt(B))^2  <  L^2 (2 m_W - 2 delta - L^2/(2 pi sqrt x))         (*)
 
 with every quantity bounded explicitly below (no placeholders).  Labels refer to section 10.
 
     T <= Tmain + Tprime + R_T, where
-      Tmain  = (Lam1 + a1)^2 + (a2 - a1^2),  Lam1 = L - 2 log L - log(2 pi)            [(I5), exact]
+      Tmain  = (Lam1 + a1)^2 + (a2 - a1^2),  Lam1 = L - 2 log L - log(pi)            [(I5), exact]
       Tprime = (2/pi^2) V^2 + 2 c_L2,         c_L2 = 0.04                              [(I6) + (K2) + Lemma L2]
       R_T    = delta (L^2 + 3L)                              (factor sqrt(1+delta)ell/delta, Lam1 shift <= delta)
              + delta [(8/3) L^3 + 33 L^2 + 136 L + 250] + 0.1 delta                    [(I5) N(T) piece, delta^2/4 piece]
@@ -21,7 +21,7 @@ with every quantity bounded explicitly below (no placeholders).  Labels refer to
     m_W >= 1/2 - 9.55/V^2 - e^{-V}                                                     [(K1)]
 
 Rearranged: (*) <=> M(L) > R(L) with
-    M(L) = 2L^2 (1/2 - 9.55/V^2 - e^{-V}) - Tmain - Tprime        (increasing for L >= L0)
+    M(L) = L^2 (2 m_low - 2 delta - L^2 e^{-L/2}/(2 pi)) - Tmain - Tprime   (increasing for L >= L0)
     R(L) = R_T + 2 sqrt(T)(sqrt E + sqrt B) + (sqrt E + sqrt B)^2
          <= Rt(L) := R_T + 2L (sqrt E + sqrt B) + (sqrt E + sqrt B)^2   (using T <= L^2; checked)
 Every summand of Rt is decreasing for L >= L0 (checked below on a grid, and argued in section 10),
@@ -41,9 +41,9 @@ L0 = math.log(3.9e18)
 def pieces(L):
     V = 3 * math.sqrt(L)
     sig = math.pi / V
-    logdelta = math.log(2) + 2 * math.log(L) - L
+    logdelta = 2 * math.log(L) - L                 # delta = L^2/x (v0.6)
     d = math.exp(logdelta)
-    lam1 = L - 2 * math.log(L) - math.log(2 * math.pi)
+    lam1 = L - 2 * math.log(L) - math.log(math.pi)
     Tmain = (lam1 + A1) ** 2 + (A2 - A1 ** 2)
     Tprime = (2 / math.pi ** 2) * V ** 2 + 2 * C_L2
     # delta * psi(e^V) with Schoenfeld (RH): psi(e^V) <= e^V + e^{V/2} V^2/(8 pi), e^V >= 73.2; log space
@@ -65,7 +65,8 @@ def pieces(L):
     E = ((L + V + 1) / math.log(2)) * (1 + d) * s
     B = 0.8 * d * math.exp(-5 * (L - V))
     m_low = 0.5 - 9.55 / V ** 2 - math.exp(-V)
-    M = 2 * L * L * m_low - Tmain - Tprime
+    cover = 2 * m_low - 2 * d - L * L * math.exp(-L / 2) / (2 * math.pi)
+    M = L * L * cover - Tmain - Tprime
     sRT = sum(RT.values())
     T = Tmain + Tprime + sRT
     sq = math.sqrt(E) + math.sqrt(B)
@@ -73,7 +74,7 @@ def pieces(L):
     Rt = sRT + 2 * L * sq + sq * sq
     lhs = (math.sqrt(T) + sq) ** 2
     return dict(V=V, delta=d, T=T, E=E, B=B, m_low=m_low, M=M, R=R, Rt=Rt, RT=RT,
-                ratio=lhs / (2 * L * L * m_low),
+                ratio=lhs / (L * L * cover),
                 one_power=L - V - 4 * math.log(L) - math.log(2))   # > 0: <= one k-th power per interval
 
 
@@ -112,7 +113,7 @@ if __name__ == "__main__":
     print(f"  T <= L^2 on grid: {TleL2};   one-power condition on grid: {all(p['one_power'] > 0 for p in P)}")
     worst = max(p['ratio'] for p in P)
     print(f"  direct check of (*) on the grid: max ratio of bounds = {worst:.7f}")
-    print("Samples (L, M, Rt, ratio of the Table 1 bounds to 2 L^2 m_low; an upper bound for the true ratio):")
+    print("Samples (L, M, Rt, ratio of the Table 1 bounds to L^2 (2 m_low - 2 delta - ...); an upper bound for the true ratio):")
     for L in [L0, 50, 100, 1000, 1e4, 1e6, 1e8]:
         p = pieces(L)
         print(f"  {L:10.4g}  {p['M']:.6e}  {p['Rt']:.3e}  {p['ratio']:.7f}")

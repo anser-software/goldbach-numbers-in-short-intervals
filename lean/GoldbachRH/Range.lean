@@ -3,13 +3,15 @@ import GoldbachRH.ExpBounds
 /-!
 # The range argument (§8 of the paper)
 
-For every `L ≥ 42.8`,
-`(√𝒯 + √ℰ + √ℬ)² < 2 L² (1/2 - 9.55/V² - e^{-V})`,
+For every `L ≥ 42.8` (version 0.6: `H = L²`, `δ = L²/x`),
+`(√𝒯 + √ℰ + √ℬ)² < L² (2m - 2δ - L²/(2π e^{L/2}))`, with `m = 1/2 - 9.55/V² - e^{-V}`,
 where `𝒯, ℰ, ℬ` are the Table 1 bounds `Tb L`, `Eb L`, `Bb L` and `V = 3√L`.
+The right side is `1/H` times the first-moment cover bound of Lemma 6 (`√x = e^{L/2}`).
 
 The route is cruder than the paper's `𝓜 > 𝓡̃` comparison but needs no derivatives:
-* `𝒯 ≤ L² - 5.4 L + 2.91`, using `γ > 1/2`, `log L ≤ 4(L^{1/4} - 1)` and `R_T ≤ 1`;
-* `L² ℰ ≤ 110` and `L² ℬ ≤ 5`, using the monotonicity of `uᵏ e^{-cu}` for `u ≥ 23.15`.
+* `𝒯 ≤ L² - 4 L + 2.91`, using `γ > 1/2`, `log L ≤ 4(L^{1/4} - 1)` and `R_T ≤ 1`;
+* `L² ℰ ≤ 140`, `L² ℬ ≤ 5` and `L² δ ≤ 5.62`, using the monotonicity of `uᵏ e^{-cu}` for
+  `u ≥ 23.15`, and `L⁴ e^{-L/2} ≤ 1`.
 -/
 
 open Real
@@ -113,7 +115,7 @@ lemma dl_le : dl L ≤ 0.29 := by
   nlinarith [mul_le_mul_of_nonneg_left hL (sq_nonneg L)]
 
 omit hL in
-lemma dl_mul_exp_Vp : dl L * exp (Vp L) = 2 * L ^ 2 * exp (-(1 * uL L)) := by
+lemma dl_mul_exp_Vp : dl L * exp (Vp L) = L ^ 2 * exp (-(1 * uL L)) := by
   unfold dl uL
   rw [mul_assoc, ← exp_add]
   ring_nf
@@ -141,7 +143,7 @@ lemma RT_le_one : RT L ≤ 1 := by
       + 0.5 * (1 + dl L) * (sg L ^ 2 + sg L + 1 / 4) * exp (Vp L / 2)) := by
     unfold RT; ring
   rw [hRT]
-  have hDE : dl L * exp (Vp L) = 2 * L ^ 2 * exp (-(1 * uL L)) := dl_mul_exp_Vp
+  have hDE : dl L * exp (Vp L) = L ^ 2 * exp (-(1 * uL L)) := dl_mul_exp_Vp
   have hu := uL_ge hL
   have hLu := L_le_two_u hL
   have hmono := pow_mul_exp_neg_le (k := 5) (c := 1) (u0 := 23.15) (u := uL L)
@@ -151,11 +153,13 @@ lemma RT_le_one : RT L ≤ 1 := by
     calc L ^ 5 ≤ (2 * uL L) ^ 5 := pow_le_pow_left₀ hL0.le hLu 5
       _ = 32 * uL L ^ 5 := by ring
   calc _ ≤ dl L * (exp (Vp L) * (4 * L ^ 3)) := mul_le_mul_of_nonneg_left hP hD0
-    _ = 8 * L ^ 5 * exp (-(1 * uL L)) := by rw [← mul_assoc, hDE]; ring
-    _ ≤ 8 * (32 * uL L ^ 5) * exp (-(1 * uL L)) := by gcongr
-    _ = 256 * (uL L ^ 5 * exp (-(1 * uL L))) := by ring
-    _ ≤ 256 * ((23.15 : ℝ) ^ 5 * exp (-(1 * 23.15))) := by gcongr
-    _ ≤ 1 := hnum
+    _ = 4 * L ^ 5 * exp (-(1 * uL L)) := by rw [← mul_assoc, hDE]; ring
+    _ ≤ 4 * (32 * uL L ^ 5) * exp (-(1 * uL L)) := by gcongr
+    _ = 128 * (uL L ^ 5 * exp (-(1 * uL L))) := by ring
+    _ ≤ 128 * ((23.15 : ℝ) ^ 5 * exp (-(1 * 23.15))) := by gcongr
+    _ ≤ 1 := by
+        have h0 : 0 ≤ (23.15 : ℝ) ^ 5 * exp (-(1 * 23.15)) := by positivity
+        linarith
 
 lemma RT_nonneg : 0 ≤ RT L := by
   have := dl_nonneg hL
@@ -165,8 +169,8 @@ lemma RT_nonneg : 0 ≤ RT L := by
   have : 0 ≤ Vp L := by linarith [Vp_ge hL]
   positivity
 
-/-- `𝒯 ≤ L² - 5.4 L + 2.91`. -/
-lemma Tb_le : Tb L ≤ L ^ 2 - 5.4 * L + 2.91 := by
+/-- `𝒯 ≤ L² - 4 L + 2.91`. -/
+lemma Tb_le : Tb L ≤ L ^ 2 - 4 * L + 2.91 := by
   have hL0 := L_pos hL
   have hs := sqrtL_ge hL
   have hs2 := sqrtL_sq hL
@@ -179,10 +183,10 @@ lemma Tb_le : Tb L ≤ L ^ 2 - 5.4 * L + 2.91 := by
     rw [hrdef, show (2.557 : ℝ) = √(2.557 ^ 2) by rw [sqrt_sq (by norm_num)]]
     exact sqrt_le_sqrt (by norm_num; linarith)
   have hL4 : L = r ^ 4 := by rw [← hs2, ← hr2]; ring
-  -- G := 2 log L + log(2π) - a₁
-  have hTm : Tmain L = (L - (2 * log L + log (2 * π) - a1)) ^ 2 + (1 + π ^ 2 / 12) := by
+  -- G := 2 log L + log π - a₁
+  have hTm : Tmain L = (L - (2 * log L + log π - a1)) ^ 2 + (1 + π ^ 2 / 12) := by
     unfold Tmain; ring
-  set G := 2 * log L + log (2 * π) - a1 with hG
+  set G := 2 * log L + log π - a1 with hG
   have hl2a := log_two_gt_d9
   have hl2b := log_two_lt_d9
   have hγa := Real.one_half_lt_eulerMascheroniConstant
@@ -192,19 +196,16 @@ lemma Tb_le : Tb L ≤ L ^ 2 - 5.4 * L + 2.91 := by
   have hlogL_lo : 5 * log 2 ≤ log L := by
     have h := log_le_log (show (0 : ℝ) < 2 ^ 5 by norm_num) (show (2 : ℝ) ^ 5 ≤ L by linarith)
     rw [log_pow] at h; push_cast at h; linarith
-  have hlog2pi_lo : 2 * log 2 ≤ log (2 * π) := by
-    have h := log_le_log (show (0 : ℝ) < 2 ^ 2 by norm_num)
-      (show (2 : ℝ) ^ 2 ≤ 2 * π by nlinarith)
-    rw [log_pow] at h; push_cast at h; linarith
-  have hlog2pi_hi : log (2 * π) ≤ 3 * log 2 := by
-    have h := log_le_log (show (0 : ℝ) < 2 * π by positivity)
-      (show 2 * π ≤ (2 : ℝ) ^ 3 by nlinarith)
+  have hlogpi_lo : log 2 ≤ log π :=
+    log_le_log (by norm_num) (by linarith)
+  have hlogpi_hi : log π ≤ 2 * log 2 := by
+    have h := log_le_log pi_pos (show π ≤ (2 : ℝ) ^ 2 by nlinarith)
     rw [log_pow] at h; push_cast at h; linarith
   have hlogL_hi : log L ≤ 4 * (r - 1) := by
     rw [hL4, log_pow]; push_cast
     have := log_le_sub_one_of_pos (show 0 < r by linarith)
     linarith
-  have hGlo : 8.51 ≤ G := by rw [hG]; unfold a1; linarith
+  have hGlo : 7.81 ≤ G := by rw [hG]; unfold a1; linarith
   have hGhi : G ≤ 8 * r - 5.56 := by rw [hG]; unfold a1; linarith
   clear_value G
   have hG2 : G ^ 2 ≤ 64 * s := by
@@ -216,10 +217,10 @@ lemma Tb_le : Tb L ≤ L ^ 2 - 5.4 * L + 2.91 := by
     rw [← hs2]; nlinarith
   have hpi2a : (3.141592 : ℝ) ^ 2 ≤ π ^ 2 := pow_le_pow_left₀ (by norm_num) hpa.le 2
   have hpi2b : π ^ 2 ≤ (3.141593 : ℝ) ^ 2 := pow_le_pow_left₀ pi_pos.le hpb.le 2
-  have hTmain : Tmain L ≤ L ^ 2 - 17.02 * L + 9.79 * L + 1.8225 := by
+  have hTmain : Tmain L ≤ L ^ 2 - 15.62 * L + 9.79 * L + 1.8225 := by
     rw [hTm]
     have e : (L - G) ^ 2 = L ^ 2 - 2 * (L * G) + G ^ 2 := by ring
-    have hLG : L * 8.51 ≤ L * G := mul_le_mul_of_nonneg_left hGlo hL0.le
+    have hLG : L * 7.81 ≤ L * G := mul_le_mul_of_nonneg_left hGlo hL0.le
     rw [e]
     norm_num at hpi2b
     linarith
@@ -323,26 +324,29 @@ lemma Eb_nonneg : 0 ≤ Eb L := by
   unfold Eb
   positivity
 
-/-- `L² ℬ ≤ 5`. -/
-lemma L2_Bb_le : L ^ 2 * Bb L ≤ 5 := by
+/-- `L² δ ≤ 5.62`. -/
+lemma L2_dl_le : L ^ 2 * dl L ≤ 5.62 := by
   have hL0 := L_pos hL
   have h5 := pow_div_factorial_le_exp L hL0.le 5
   norm_num [Nat.factorial] at h5
+  unfold dl
+  rw [exp_neg, ← div_eq_mul_inv]
+  rw [show L ^ 2 * (L ^ 2 / exp L) = L ^ 4 / exp L by ring,
+    div_le_iff₀ (exp_pos L)]
+  have h45 : 42.8 * L ^ 4 ≤ L ^ 5 := by
+    have := mul_le_mul_of_nonneg_right hL (pow_nonneg hL0.le 4)
+    calc 42.8 * L ^ 4 ≤ L * L ^ 4 := this
+      _ = L ^ 5 := by ring
+  have h5' := mul_le_mul_of_nonneg_left h5 (by norm_num : (0 : ℝ) ≤ 5.62)
+  have : L ^ 4 ≤ 5.62 * (L ^ 5 / 120) := by linarith [pow_nonneg hL0.le 4]
+  linarith
+
+/-- `L² ℬ ≤ 5`. -/
+lemma L2_Bb_le : L ^ 2 * Bb L ≤ 5 := by
   have hu := uL_ge hL
   have he : exp (-5 * uL L) ≤ 1 := exp_le_one_iff.2 (by linarith)
   have he0 : 0 ≤ exp (-5 * uL L) := (exp_pos _).le
-  have hD : L ^ 2 * dl L ≤ 5.62 := by
-    unfold dl
-    rw [exp_neg, ← div_eq_mul_inv]
-    rw [show L ^ 2 * (2 * L ^ 2 / exp L) = 2 * L ^ 4 / exp L by ring,
-      div_le_iff₀ (exp_pos L)]
-    have h45 : 42.8 * L ^ 4 ≤ L ^ 5 := by
-      have := mul_le_mul_of_nonneg_right hL (pow_nonneg hL0.le 4)
-      calc 42.8 * L ^ 4 ≤ L * L ^ 4 := this
-        _ = L ^ 5 := by ring
-    have h5' := mul_le_mul_of_nonneg_left h5 (by norm_num : (0 : ℝ) ≤ 5.62)
-    have : 2 * L ^ 4 ≤ 5.62 * (L ^ 5 / 120) := by linarith [pow_nonneg hL0.le 4]
-    linarith
+  have hD := L2_dl_le hL
   unfold Bb
   have hD0 : 0 ≤ L ^ 2 * dl L := mul_nonneg (by positivity) (dl_nonneg hL)
   calc L ^ 2 * (0.8 * dl L * exp (-5 * uL L)) = 0.8 * (L ^ 2 * dl L) * exp (-5 * uL L) := by ring
@@ -370,10 +374,26 @@ lemma two_L2_exp_neg_V : 2 * L ^ 2 * exp (-Vp L) ≤ 0.05 := by
     nlinarith [mul_le_mul_of_nonneg_left hsq hs4]
   linarith
 
-/-- **Range inequality.** For every `L ≥ 42.8`,
-`(√𝒯 + √ℰ + √ℬ)² < 2 L² (1/2 - 9.55/V² - e^{-V})`. -/
+/-- `L⁴ ≤ e^{L/2}`, i.e. `L⁴ / e^{L/2} ≤ 1`. -/
+lemma L4_div_exp_half_le : L ^ 4 / exp (L / 2) ≤ 1 := by
+  have hL0 := L_pos hL
+  rw [div_le_one (exp_pos _)]
+  have h := pow_div_factorial_le_exp (L / 2) (by linarith) 10
+  norm_num [Nat.factorial] at h
+  have hL6 : (42.8 : ℝ) ^ 6 ≤ L ^ 6 := pow_le_pow_left₀ (by norm_num) hL 6
+  have h10 : L ^ 4 * 42.8 ^ 6 ≤ L ^ 10 := by
+    calc L ^ 4 * 42.8 ^ 6 ≤ L ^ 4 * L ^ 6 := mul_le_mul_of_nonneg_left hL6 (pow_nonneg hL0.le 4)
+      _ = L ^ 10 := by ring
+  have h4 : 0 ≤ L ^ 4 := pow_nonneg hL0.le 4
+  norm_num at h10
+  nlinarith
+
+/-- **Range inequality** (version 0.6). For every `L ≥ 42.8`,
+`(√𝒯 + √ℰ + √ℬ)² < L² (2m - 2δ - L²/(2π e^{L/2}))`, with `m = 1/2 - 9.55/V² - e^{-V}`. -/
 theorem range_inequality :
-    (√(Tb L) + √(Eb L) + √(Bb L)) ^ 2 < 2 * L ^ 2 * (1 / 2 - 9.55 / Vp L ^ 2 - exp (-Vp L)) := by
+    (√(Tb L) + √(Eb L) + √(Bb L)) ^ 2 <
+      L ^ 2 * (2 * (1 / 2 - 9.55 / Vp L ^ 2 - exp (-Vp L)) - 2 * dl L
+        - L ^ 2 / (2 * π * exp (L / 2))) := by
   have hL0 := L_pos hL
   have hT := Tb_le hL
   have hT0 := Tb_nonneg hL
@@ -383,9 +403,11 @@ theorem range_inequality :
   have hB0 := Bb_nonneg hL
   have hX := two_L2_exp_neg_V hL
   have hV2 := Vp_sq hL
+  have hD := L2_dl_le hL
+  have hQ := L4_div_exp_half_le hL
   -- `√𝒯 ≤ L`
   have hTL : √(Tb L) ≤ L := (sqrt_le_left hL0.le).2 (by nlinarith)
-  -- `L √ℰ ≤ 10.49` and `L √ℬ ≤ 2.24`
+  -- `L √ℰ ≤ 11.84` and `L √ℬ ≤ 2.24`
   have hEs0 := sqrt_nonneg (Eb L)
   have hBs0 := sqrt_nonneg (Bb L)
   have hEL : L * √(Eb L) ≤ 11.84 := by
@@ -398,17 +420,26 @@ theorem range_inequality :
   have hb0 : 0 ≤ b := by positivity
   have hLb : L * b ≤ 14.08 := by rw [hbdef]; nlinarith
   have hb : b ≤ 0.33 := by nlinarith [mul_le_mul_of_nonneg_right hL hb0]
-  have hS : (√(Tb L) + √(Eb L) + √(Bb L)) ^ 2 ≤ L ^ 2 - 5.4 * L + 2.91 + 28.16 + 0.11 := by
+  have hS : (√(Tb L) + √(Eb L) + √(Bb L)) ^ 2 ≤ L ^ 2 - 4 * L + 2.91 + 28.16 + 0.11 := by
     have e : (√(Tb L) + √(Eb L) + √(Bb L)) ^ 2 = Tb L + 2 * √(Tb L) * b + b ^ 2 := by
       rw [hbdef]; nlinarith [sq_sqrt hT0]
     rw [e]
     have h1 : 2 * √(Tb L) * b ≤ 2 * L * b := by
       have := mul_le_mul_of_nonneg_right hTL hb0; linarith
     nlinarith
-  have hR : 2 * L ^ 2 * (1 / 2 - 9.55 / Vp L ^ 2 - exp (-Vp L))
+  have hR0 : 2 * L ^ 2 * (1 / 2 - 9.55 / Vp L ^ 2 - exp (-Vp L))
       = L ^ 2 - 19.1 / 9 * L - 2 * L ^ 2 * exp (-Vp L) := by
     rw [hV2]; field_simp; ring
-  rw [hR]
+  have hQ' : L ^ 2 * (L ^ 2 / (2 * π * exp (L / 2))) ≤ 1 := by
+    have e : L ^ 2 * (L ^ 2 / (2 * π * exp (L / 2))) = L ^ 4 / exp (L / 2) / (2 * π) := by
+      field_simp
+    rw [e, div_le_one (by positivity)]
+    nlinarith [pi_gt_three]
+  have hR : L ^ 2 * (2 * (1 / 2 - 9.55 / Vp L ^ 2 - exp (-Vp L)) - 2 * dl L
+        - L ^ 2 / (2 * π * exp (L / 2)))
+      = 2 * L ^ 2 * (1 / 2 - 9.55 / Vp L ^ 2 - exp (-Vp L)) - 2 * (L ^ 2 * dl L)
+        - L ^ 2 * (L ^ 2 / (2 * π * exp (L / 2))) := by ring
+  rw [hR, hR0]
   nlinarith
 
 end
