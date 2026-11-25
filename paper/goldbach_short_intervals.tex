@@ -1,4 +1,4 @@
-% Version 0.6, 24 November 2026.  Build: ~/.local/bin/tectonic -X compile goldbach_short_intervals.tex  (Tectonic 0.17.0).
+% Version 0.6.1, 25 November 2026.  Build: ~/.local/bin/tectonic -X compile goldbach_short_intervals.tex  (Tectonic 0.17.0).
 % The numbering of Theorem 1 -- Remark 14 is referenced by the Lean formalization and the README;
 % new remarks must stay unnumbered (remark*).
 \documentclass[11pt]{amsart}
@@ -30,7 +30,7 @@
 \title[Goldbach numbers in short intervals]{Goldbach numbers in intervals of length $\log^2 x$\\ under the Riemann hypothesis}
 \author{Anton Vynohradov}
 \urladdr{https://orcid.org/0009-0002-6771-3681}
-\date{Version 0.6, 24 November 2026}
+\date{Version 0.6.1, 25 November 2026}
 \subjclass[2020]{Primary 11P32; Secondary 11M26, 11N05}
 \keywords{Goldbach numbers, short intervals, Riemann hypothesis, explicit formula, Selberg integral}
 
@@ -79,6 +79,7 @@ Chirre and Hagen bound the Selberg integral by
 \item \emph{Exact evaluation of the zero sum.} With $W$ positive definite, Schur's test and the Weil explicit formula evaluate the zero double sum exactly, up to explicit remainders. The prime terms of the explicit formula, averaged over the zeros, contribute the positive cost $2\delta\sum_n\Lambda(n)^2W(\log n)/n\approx2\delta\int_0^VvW$. This cost is $O(V^2)=o(\log^2x)$ when $V\asymp\sqrt{\log x}$. The weight also kills prime powers below $xe^{-V}$, so the difference between $\theta$ and $\psi$ becomes negligible.
 \item \emph{A first moment over symmetric level sets.} The covering above uses only the prime-free member of each pair. The other member then contains, on average, twice the expected number of primes. We integrate over the superlevel sets of a weight that is symmetric about $x/2$. On each of them the identity $(a-1)^2+(b-1)^2=2(a+b)-2+(a+b-2)^2$, valid when $ab=0$, turns this first moment into a second deficit of the same size. This saves a further factor $2$.
 \end{enumerate}
+He Li independently found change~(4) and the resulting constant~$1$. He posted them on 24 November 2026, before version~0.6 appeared, as issue~\#1 in the repository of this paper~\cite{HeLi}. His argument bounds the first moment by Fubini's theorem and the total variation of the symmetric weight. This avoids the terms in $\delta$ of Lemma~\ref{lem:cover}.
 
 \subsection{Outline}
 Section~\ref{sec:kernel} constructs the weight $W$ and lists its properties. Section~\ref{sec:cover} turns the absence of Goldbach numbers into a lower bound for a weighted Selberg integral (Lemma~\ref{lem:cover}); this step uses RH only through Schoenfeld's bound for $\theta$. Sections~\ref{sec:schur}--\ref{sec:arith} bound the same integral from above under RH. The explicit formula splits it into a sum over zeros, a small term from the trivial zeros and a prime-power term (\S\ref{sec:schur}). The sum over zeros is evaluated with the Weil explicit formula (\S\ref{sec:weil}) and Stieltjes integration against the zero-counting function (\S\ref{sec:main}). Section~\ref{sec:arith} collects the arithmetic input. Section~\ref{sec:proof} combines the bounds and proves Theorem~\ref{thm:main}. Section~\ref{sec:optimality} compares the method heuristically with Goldston's deduction; nothing in it is used in the proof. Appendix~\ref{app:comp} lists the computations.
@@ -631,6 +632,7 @@ All computations are reproducible with the scripts accompanying this paper. They
 \bibitem{Goldston} D.~A.~Goldston, Linnik's theorem on Goldbach numbers in short intervals, \emph{Glasgow Math. J.} \textbf{32} (1990), 285--297.
 \bibitem{Hubbard} S.~Hubbard, Goldbach numbers in intervals of length $4.45\log^2x$ under the Riemann Hypothesis, Hexagon preprint hexagon:2610.00542v3 (2026). \url{https://hexagonmath.org/2610.00542v3}
 \bibitem{Katai} I.~Kátai, A remark on a paper of Ju.~V.~Linnik, \emph{Magyar Tud. Akad. Mat. Fiz. Oszt. Közl.} \textbf{17} (1967), 99--100.
+\bibitem{HeLi} He~Li, A first-moment refinement of Lemma~6 doubles the cover bound and gives $(x,x+\log^2x]$, issue~\#1 (24 November 2026) in the repository of this paper. \url{https://github.com/anser-software/goldbach-numbers-in-short-intervals/issues/1}
 \bibitem{Linnik} Yu.~V.~Linnik, Some conditional theorems concerning the binary Goldbach problem, \emph{Izv. Akad. Nauk SSSR Ser. Mat.} \textbf{16} (1952), no.~6, 503--520.
 \bibitem{Montgomery} H.~L.~Montgomery, The pair correlation of zeros of the zeta function, in: \emph{Analytic Number Theory}, Proc. Sympos. Pure Math. 24, Amer. Math. Soc., 1973, 181--193.
 \bibitem{MV} H.~L.~Montgomery, R.~C.~Vaughan, The exceptional set in Goldbach's problem, \emph{Acta Arith.} \textbf{27} (1975), 353--370. \url{https://doi.org/10.4064/aa-27-1-353-370}

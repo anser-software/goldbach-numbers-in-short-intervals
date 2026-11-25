@@ -7,6 +7,10 @@ If `(x, (1+δ)x]` contains no Goldbach number, then under Schoenfeld's bound for
 `∫_{y > 0} V_θ(y)² ω(y) dy ≥ δ² x³ (2 m - 2δ - log² x / (2π √x))`,
 where `m = 1/2 - 9.55/V² - e^{-V}` is the lower bound of Corollary 5 for `m_W`.
 
+He Li independently found this refinement and posted it as issue #1 of the repository
+(24 November 2026). His version bounds the first moment by Fubini's theorem and the total
+variation of the weight; the version here integrates over the level sets of the weight.
+
 This file contains the one-variable ingredients: the kernel facts, the functions `w`, `q`, `G`,
 and the first-moment bound on a single symmetric interval (`integral_G_ge`).
 -/

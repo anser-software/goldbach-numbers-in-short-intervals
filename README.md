@@ -7,7 +7,10 @@ r + log² r = 6, the interval (x, x + log² x] contains an even number that is a
 primes. The starting point is sharp: for 4 ≤ x < r the interval contains none. On the whole
 range x ≥ 4 the optimal constant is C\* = 2/log² 4 = 1.0406…. The best published constant was 123
 (Chirre–Hagen, Res. Number Theory 2026). Hubbard has since announced 4.45 in an unrefereed
-preprint (Hexagon 2610.00542), and version 0.5 of this work gave 2.
+preprint (Hexagon 2610.00542), and version 0.5 of this work gave 2. He Li independently found the
+first-moment refinement of the cover lemma that gives the constant 1, and posted it as
+[issue #1](https://github.com/anser-software/goldbach-numbers-in-short-intervals/issues/1)
+before v0.6 appeared.
 
 > **Status: unreviewed preprint.** The work was done largely with an AI model (Claude, Anthropic).
 > RH is assumed throughout; an announced formal proof of GRH has not been independently confirmed.
