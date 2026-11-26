@@ -1,6 +1,6 @@
 # Goldbach numbers in intervals of length log² x under RH
 
-[![DOI](https://zenodo.org/badge/1467471122.svg)](https://doi.org/10.5281/zenodo.24441477)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24441477.svg)](https://doi.org/10.5281/zenodo.24441477)
 
 **Claim (conditional on the Riemann hypothesis).** For every real x ≥ r = 4.0462…, where
 r + log² r = 6, the interval (x, x + log² x] contains an even number that is a sum of two
